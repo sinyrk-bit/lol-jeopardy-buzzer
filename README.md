@@ -1,5 +1,7 @@
 # League of Legends Jeopardy
 
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/sinyrk-bit/lol-jeopardy-buzzer)
+
 A complete React + TypeScript Jeopardy game inspired by a dark fantasy esports show board.
 
 ## Features
