@@ -1,0 +1,99 @@
+import { BuzzerPanel } from './BuzzerPanel'
+import type { CSSProperties } from 'react'
+import type { BuzzerEntry, Question, Team } from '../types/game'
+
+type QuestionCardProps = {
+  question: Question
+  teams: Team[]
+  showAnswer: boolean
+  wrongAnswerCostsPoints: boolean
+  buzzerQueue: BuzzerEntry[]
+  buzzerLocked: boolean
+  onShowAnswer: () => void
+  onAward: (teamId: string, correct: boolean) => void
+  onNoAnswer: () => void
+  onBackToBoard: () => void
+  onBuzz: (teamId: string) => void
+  onResetBuzzers: () => void
+  onToggleBuzzerLock: () => void
+}
+
+export function QuestionCard({
+  question,
+  teams,
+  showAnswer,
+  wrongAnswerCostsPoints,
+  buzzerQueue,
+  buzzerLocked,
+  onShowAnswer,
+  onAward,
+  onNoAnswer,
+  onBackToBoard,
+  onBuzz,
+  onResetBuzzers,
+  onToggleBuzzerLock,
+}: QuestionCardProps) {
+  return (
+    <section className="question-stage" aria-label="Aktuelle Frage">
+      <div className="question-card">
+        <p className="eyebrow">
+          {question.category} - {question.value}
+        </p>
+        <h1>{question.question}</h1>
+
+        {!showAnswer ? (
+          <button className="primary-button" type="button" onClick={onShowAnswer}>
+            Antwort anzeigen
+          </button>
+        ) : (
+          <div className="answer-block">
+            <p className="eyebrow">Antwort</p>
+            <h2>{question.answer}</h2>
+            {question.explanation ? <p>{question.explanation}</p> : null}
+          </div>
+        )}
+      </div>
+
+      <BuzzerPanel
+        teams={teams}
+        queue={buzzerQueue}
+        locked={buzzerLocked}
+        onBuzz={onBuzz}
+        onReset={onResetBuzzers}
+        onToggleLock={onToggleBuzzerLock}
+      />
+
+      {showAnswer ? (
+        <section className="host-panel" aria-label="Host-Steuerung">
+          <div>
+            <p className="eyebrow">Punkte vergeben</p>
+            <h2>{wrongAnswerCostsPoints ? 'Falsche Antworten kosten Punkte' : 'Falsche Antworten kosten nichts'}</h2>
+          </div>
+          <div className="award-grid">
+            {teams.map((team) => (
+              <div className="award-card" key={team.id} style={{ '--team-color': team.color } as CSSProperties}>
+                <strong>{team.name}</strong>
+                <div>
+                  <button type="button" onClick={() => onAward(team.id, true)}>
+                    Richtig
+                  </button>
+                  <button type="button" onClick={() => onAward(team.id, false)}>
+                    Falsch
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="host-actions">
+            <button className="secondary-button" type="button" onClick={onNoAnswer}>
+              Niemand richtig
+            </button>
+            <button className="secondary-button" type="button" onClick={onBackToBoard}>
+              Zurueck zum Board
+            </button>
+          </div>
+        </section>
+      ) : null}
+    </section>
+  )
+}
