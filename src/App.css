@@ -188,6 +188,8 @@ p {
 .host-panel,
 .room-panel,
 .lobby-overlay,
+.question-start-overlay,
+.question-start-panel,
 .player-question,
 .player-team-strip,
 .buzz-waiting,
@@ -861,6 +863,44 @@ p {
   width: min(100%, 980px);
 }
 
+.question-start-overlay {
+  display: grid;
+  gap: 10px;
+  max-height: calc(100svh - 24px);
+  max-width: 1080px;
+  overflow: hidden;
+  padding: clamp(12px, 1.8vw, 20px);
+  width: min(100%, 1080px);
+}
+
+.question-start-panel {
+  display: grid;
+  gap: 10px;
+  min-height: 0;
+  overflow: hidden;
+  padding: clamp(12px, 1.8vw, 20px);
+}
+
+.question-start-preview {
+  min-height: 0;
+  overflow: auto;
+}
+
+.question-start-preview h1 {
+  font-size: clamp(1.65rem, 4.2vw, 4.2rem);
+  line-height: 0.96;
+}
+
+.question-start-actions {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.question-start-actions button {
+  min-height: 48px;
+}
+
 .overlay-score-strip .scoreboard {
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
 }
@@ -1076,6 +1116,10 @@ p {
 
   .lobby-header {
     align-items: stretch;
+    grid-template-columns: 1fr;
+  }
+
+  .question-start-actions {
     grid-template-columns: 1fr;
   }
 

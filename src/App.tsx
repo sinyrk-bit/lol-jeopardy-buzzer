@@ -5,6 +5,7 @@ import { GameOverScreen } from './components/GameOverScreen'
 import { HostRoomPanel } from './components/HostRoomPanel'
 import { LobbyOverlay } from './components/LobbyOverlay'
 import { PlayerView } from './components/PlayerView'
+import { QuestionStartOverlay } from './components/QuestionStartOverlay'
 import { QuestionCard } from './components/QuestionCard'
 import { Scoreboard } from './components/Scoreboard'
 import { SetupScreen } from './components/SetupScreen'
@@ -21,7 +22,7 @@ const emptyGameState: GameState = {
   gameFinished: false,
   wrongAnswerCostsPoints: true,
   buzzerQueue: [],
-  buzzerLocked: false,
+  buzzerLocked: true,
   players: [],
 }
 
@@ -32,6 +33,7 @@ function App() {
   const [playerName, setPlayerName] = useState('')
   const [playerMode, setPlayerMode] = useState(Boolean(joinRoomId))
   const [showLobby, setShowLobby] = useState(false)
+  const [pendingQuestion, setPendingQuestion] = useState<Question | null>(null)
   const players = useMemo(() => gameState.players ?? [], [gameState.players])
   const hasSavedGame = gameState.teams.length > 0 && !gameState.gameFinished
   const getQuestionValue = (question: Question, usedCount = gameState.usedQuestions.length) =>
@@ -161,13 +163,22 @@ function App() {
   }
 
   const openQuestion = (question: Question) => {
+    setPendingQuestion(question)
+  }
+
+  const startPendingQuestion = (useBuzzer: boolean) => {
+    if (!pendingQuestion) {
+      return
+    }
+
     setGameState((current) => ({
       ...current,
-      currentQuestion: question,
+      currentQuestion: pendingQuestion,
       showAnswer: false,
       buzzerQueue: [],
-      buzzerLocked: false,
+      buzzerLocked: !useBuzzer,
     }))
+    setPendingQuestion(null)
   }
 
   const finishQuestion = (teamId?: string, correct?: boolean) => {
@@ -198,7 +209,7 @@ function App() {
         showAnswer: false,
         gameFinished,
         buzzerQueue: [],
-        buzzerLocked: false,
+        buzzerLocked: true,
       }
     })
   }
@@ -277,9 +288,9 @@ function App() {
             onShowAnswer={() => setGameState((current) => ({ ...current, showAnswer: true, buzzerLocked: true }))}
             onAward={(teamId, correct) => finishQuestion(teamId, correct)}
             onNoAnswer={() => finishQuestion()}
-            onBackToBoard={() => setGameState((current) => ({ ...current, currentQuestion: null }))}
+            onBackToBoard={() => setGameState((current) => ({ ...current, currentQuestion: null, buzzerLocked: true }))}
             onBuzz={buzz}
-            onResetBuzzers={() => setGameState((current) => ({ ...current, buzzerQueue: [], buzzerLocked: false }))}
+            onResetBuzzers={() => setGameState((current) => ({ ...current, buzzerQueue: [], buzzerLocked: true }))}
             onToggleBuzzerLock={() => setGameState((current) => ({ ...current, buzzerLocked: !current.buzzerLocked }))}
           />
         ) : (
@@ -290,6 +301,18 @@ function App() {
             onSelectQuestion={openQuestion}
           />
         )}
+
+        {pendingQuestion ? (
+          <QuestionStartOverlay
+            question={pendingQuestion}
+            displayValue={getQuestionValue(pendingQuestion)}
+            teams={gameState.teams}
+            players={players}
+            onStartWithBuzzer={() => startPendingQuestion(true)}
+            onStartWithoutBuzzer={() => startPendingQuestion(false)}
+            onCancel={() => setPendingQuestion(null)}
+          />
+        ) : null}
 
         {showLobby ? (
           <LobbyOverlay
