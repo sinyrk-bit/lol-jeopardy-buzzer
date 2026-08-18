@@ -40,6 +40,37 @@ function broadcastGuestCount(roomId) {
   }
 }
 
+function syncRoomPlayersFromSnapshot(room, snapshot) {
+  const players = snapshot?.state?.players
+  if (!Array.isArray(players)) {
+    return
+  }
+
+  players.forEach((player) => {
+    if (player?.id) {
+      room.players.set(player.id, player)
+    }
+  })
+}
+
+function filterSnapshotForPlayer(snapshot, playerId, room) {
+  const player = room.players.get(playerId)
+  const teamId = player?.teamId ?? null
+  const chatMessages = snapshot?.state?.chatMessages
+
+  if (!Array.isArray(chatMessages)) {
+    return snapshot
+  }
+
+  return {
+    ...snapshot,
+    state: {
+      ...snapshot.state,
+      chatMessages: chatMessages.filter((message) => message.scope === 'public' || message.teamId === teamId),
+    },
+  }
+}
+
 const server = createServer(async (request, response) => {
   const requestUrl = new URL(request.url ?? '/', `http://${request.headers.host}`)
   const unsafePath = requestUrl.pathname === '/' ? '/index.html' : requestUrl.pathname
@@ -104,7 +135,7 @@ wss.on('connection', (socket) => {
       room.players.set(currentPlayerId, player)
       send(room.host, { type: 'player-joined', player })
       if (room.lastSnapshot) {
-        send(socket, { type: 'snapshot', payload: room.lastSnapshot })
+        send(socket, { type: 'snapshot', payload: filterSnapshotForPlayer(room.lastSnapshot, currentPlayerId, room) })
       }
       broadcastGuestCount(currentRoomId)
       return
@@ -117,7 +148,10 @@ wss.on('connection', (socket) => {
 
     if (message.type === 'snapshot' && isHost) {
       room.lastSnapshot = message.payload
-      room.guests.forEach((_playerId, guest) => send(guest, { type: 'snapshot', payload: message.payload }))
+      syncRoomPlayersFromSnapshot(room, message.payload)
+      room.guests.forEach((guestPlayerId, guest) =>
+        send(guest, { type: 'snapshot', payload: filterSnapshotForPlayer(message.payload, guestPlayerId, room) }),
+      )
       return
     }
 
@@ -135,6 +169,15 @@ wss.on('connection', (socket) => {
         playerId: currentPlayerId || message.playerId,
         value: Number(message.value),
         finalized: Boolean(message.finalized),
+      })
+    }
+
+    if (message.type === 'send-chat' && !isHost && room.host) {
+      send(room.host, {
+        type: 'send-chat',
+        playerId: currentPlayerId || message.playerId,
+        scope: message.scope === 'team' ? 'team' : 'public',
+        text: String(message.text ?? '').slice(0, 300),
       })
     }
   })

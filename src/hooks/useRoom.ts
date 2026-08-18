@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import type { HostMessage, NetworkStatus, PlayerMessage, PublicGameSnapshot } from '../types/game'
+import type { ChatScope, HostMessage, NetworkStatus, PlayerMessage, PublicGameSnapshot } from '../types/game'
 
 type UseRoomOptions = {
   initialRoomId?: string
@@ -117,6 +117,7 @@ export function useRoom({ initialRoomId, getSnapshot, onPlayerMessage, onHostMes
           message.type === 'buzz' ||
           message.type === 'pick-question' ||
           message.type === 'submit-estimate' ||
+          message.type === 'send-chat' ||
           message.type === 'player-joined' ||
           message.type === 'player-left'
         ) {
@@ -189,6 +190,13 @@ export function useRoom({ initialRoomId, getSnapshot, onPlayerMessage, onHostMes
     [playerId, send],
   )
 
+  const sendChat = useCallback(
+    (scope: ChatScope, text: string) => {
+      send({ type: 'send-chat', playerId, scope, text })
+    },
+    [playerId, send],
+  )
+
   useEffect(() => closeRoom, [closeRoom])
 
   return {
@@ -206,5 +214,6 @@ export function useRoom({ initialRoomId, getSnapshot, onPlayerMessage, onHostMes
     sendBuzz,
     sendQuestionPick,
     sendEstimate,
+    sendChat,
   }
 }

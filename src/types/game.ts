@@ -42,6 +42,18 @@ export type EstimateSubmission = {
   timestamp: number
 }
 
+export type ChatScope = 'public' | 'team'
+
+export type ChatMessage = {
+  id: string
+  scope: ChatScope
+  teamId: string | null
+  authorId: string
+  authorName: string
+  text: string
+  timestamp: number
+}
+
 export type GameState = {
   teams: Team[]
   usedQuestions: string[]
@@ -56,6 +68,7 @@ export type GameState = {
   requestedQuestionId: string | null
   requestedByTeamId: string | null
   estimateSubmissions: EstimateSubmission[]
+  chatMessages: ChatMessage[]
 }
 
 export type Screen = 'home' | 'setup' | 'game' | 'gameOver'
@@ -103,4 +116,10 @@ export type PlayerMessage =
       playerId: string
       value: number
       finalized: boolean
+    }
+  | {
+      type: 'send-chat'
+      playerId: string
+      scope: ChatScope
+      text: string
     }

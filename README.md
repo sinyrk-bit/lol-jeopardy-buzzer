@@ -16,6 +16,7 @@ Eine vollständige React- und TypeScript-Jeopardy-App, inspiriert von einem dunk
 - Team-Buzzer-System mit Reihenfolge, Sperre und Reset
 - Live-Spielerlobby, in der der Host Spieler Teams zuweist
 - Einladungslink für Freunde über den eingebauten WebSocket-Raum-Server
+- Allgemeinchat für alle und farbiger Teamchat nur für Teammitglieder plus Host
 - Host sieht die Antwort privat, bevor sie für Spieler aufgedeckt wird
 - Host-Steuerung für Antworten, Fragenabschluss, Punktevergabe und Spielerwechsel
 - feste Team-Anzeige in Setup-Reihenfolge, damit Team 1 bis 4 nicht nach Punkten springen
@@ -58,6 +59,8 @@ Starte als Host ein Spiel, klicke auf `Link erstellen` und teile die erzeugte UR
 Der Host sieht die Antwort sofort im privaten Host-Panel. Spieler sehen sie erst, wenn der Host auf `Antwort für Spieler aufdecken` klickt.
 
 Die Team-Leiste bleibt immer in der Setup-Reihenfolge. Über `Auswahlrecht` legt der Host fest, welches Team die nächste Frage aussuchen darf. Nur Spieler aus diesem Team können auf dem Board eine Punkte-Kachel markieren; der Host sieht diese Markierung und klickt sie an, um die Frage mit oder ohne Buzzer freizugeben. Nach dem Abschluss der Frage springt das Auswahlrecht automatisch zum nächsten Team in der festen Reihenfolge.
+
+Der Chat ist im Spiel und über den Overlays sichtbar. `Alle` ist der Allgemeinchat für alle verbundenen Spieler. `Team` ist farblich markiert und wird nur dem eigenen Team sowie dem Host angezeigt; der Host kann beim Schreiben in den Teamchat auswählen, welches Team die Nachricht bekommt.
 
 ## Kluft-Kalkulation
 

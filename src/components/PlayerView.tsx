@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
+import { ChatPanel } from './ChatPanel'
 import { GameBoard } from './GameBoard'
 import { QuestionMedia } from './QuestionMedia'
 import { Scoreboard } from './Scoreboard'
 import type { CSSProperties } from 'react'
-import type { GameState, NetworkStatus, Question } from '../types/game'
+import type { ChatScope, GameState, NetworkStatus, Question } from '../types/game'
 import { questions } from '../data/questions'
 
 type PlayerViewProps = {
@@ -14,9 +15,19 @@ type PlayerViewProps = {
   onBuzz: () => void
   onPickQuestion: (questionId: string) => void
   onSubmitEstimate: (value: number, finalized?: boolean) => void
+  onSendChat: (scope: ChatScope, text: string) => void
 }
 
-export function PlayerView({ gameState, playerId, status, error, onBuzz, onPickQuestion, onSubmitEstimate }: PlayerViewProps) {
+export function PlayerView({
+  gameState,
+  playerId,
+  status,
+  error,
+  onBuzz,
+  onPickQuestion,
+  onSubmitEstimate,
+  onSendChat,
+}: PlayerViewProps) {
   const [estimateValue, setEstimateValue] = useState('')
   const currentQuestion = gameState.currentQuestion
   const remaining = questions.length - gameState.usedQuestions.length
@@ -153,6 +164,14 @@ export function PlayerView({ gameState, playerId, status, error, onBuzz, onPickQ
           onSelectQuestion={(question: Question) => onPickQuestion(question.id)}
         />
       )}
+
+      <ChatPanel
+        messages={gameState.chatMessages ?? []}
+        teams={gameState.teams}
+        role="player"
+        currentTeamId={assignedTeam?.id ?? null}
+        onSend={(messageScope, messageText) => onSendChat(messageScope, messageText)}
+      />
     </main>
   )
 }

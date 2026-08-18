@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import './App.css'
+import { ChatPanel } from './components/ChatPanel'
 import { GameBoard } from './components/GameBoard'
 import { GameOverScreen } from './components/GameOverScreen'
 import { HostRoomPanel } from './components/HostRoomPanel'
@@ -13,7 +14,7 @@ import { TurnControl } from './components/TurnControl'
 import { questions } from './data/questions'
 import { useLocalStorage } from './hooks/useLocalStorage'
 import { useRoom } from './hooks/useRoom'
-import type { GameState, Player, PlayerMessage, Question, Screen, Team } from './types/game'
+import type { ChatMessage, ChatScope, GameState, Player, PlayerMessage, Question, Screen, Team } from './types/game'
 
 const emptyGameState: GameState = {
   teams: [],
@@ -29,6 +30,7 @@ const emptyGameState: GameState = {
   requestedQuestionId: null,
   requestedByTeamId: null,
   estimateSubmissions: [],
+  chatMessages: [],
 }
 
 function getNextTeamId(teams: Team[], currentTeamId: string | null) {
@@ -39,6 +41,10 @@ function getNextTeamId(teams: Team[], currentTeamId: string | null) {
   const currentIndex = teams.findIndex((team) => team.id === currentTeamId)
   const nextIndex = currentIndex === -1 ? 0 : (currentIndex + 1) % teams.length
   return teams[nextIndex]?.id ?? null
+}
+
+function makeChatId() {
+  return `chat-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`
 }
 
 function App() {
@@ -94,6 +100,7 @@ function App() {
     sendBuzz,
     sendQuestionPick,
     sendEstimate,
+    sendChat,
   } = useRoom({
     initialRoomId: joinRoomId,
     getSnapshot: () => ({
@@ -164,6 +171,29 @@ function App() {
         }
       }
 
+      if (message.type === 'send-chat') {
+        const player = players.find((candidate) => candidate.id === message.playerId)
+        const text = message.text.trim().slice(0, 300)
+
+        if (player && text) {
+          const scope: ChatScope = message.scope === 'team' && player.teamId ? 'team' : 'public'
+          const chatMessage: ChatMessage = {
+            id: makeChatId(),
+            scope,
+            teamId: scope === 'team' ? player.teamId : null,
+            authorId: player.id,
+            authorName: player.name,
+            text,
+            timestamp: Date.now(),
+          }
+
+          setGameState((current) => ({
+            ...current,
+            chatMessages: [...(current.chatMessages ?? []), chatMessage].slice(-120),
+          }))
+        }
+      }
+
       if (message.type === 'player-joined') {
         setGameState((current) => {
           const currentPlayers = current.players ?? []
@@ -228,6 +258,29 @@ function App() {
     setGameState((current) => ({
       ...current,
       players: (current.players ?? []).map((player) => (player.id === assignedPlayerId ? { ...player, teamId } : player)),
+    }))
+  }
+
+  const sendHostChat = (scope: ChatScope, text: string, teamId?: string | null) => {
+    const trimmed = text.trim().slice(0, 300)
+    if (!trimmed) {
+      return
+    }
+
+    const messageScope: ChatScope = scope === 'team' && teamId ? 'team' : 'public'
+    const chatMessage: ChatMessage = {
+      id: makeChatId(),
+      scope: messageScope,
+      teamId: messageScope === 'team' ? teamId ?? null : null,
+      authorId: 'host',
+      authorName: 'Host',
+      text: trimmed,
+      timestamp: Date.now(),
+    }
+
+    setGameState((current) => ({
+      ...current,
+      chatMessages: [...(current.chatMessages ?? []), chatMessage].slice(-120),
     }))
   }
 
@@ -334,6 +387,7 @@ function App() {
         onBuzz={sendBuzz}
         onPickQuestion={sendQuestionPick}
         onSubmitEstimate={sendEstimate}
+        onSendChat={sendChat}
       />
     )
   }
@@ -450,6 +504,14 @@ function App() {
             onStartRoom={hostRoom}
           />
         ) : null}
+
+        <ChatPanel
+          messages={gameState.chatMessages ?? []}
+          teams={gameState.teams}
+          role="host"
+          currentTeamId={activeTeamId}
+          onSend={sendHostChat}
+        />
       </main>
     )
   }
