@@ -1,18 +1,18 @@
 import type { Question } from '../types/game'
 
 export const categories = [
-  'Champions',
+  'Champ Select',
   'Kluft-Kalkulation',
-  'Fähigkeiten',
+  'Ability Abuse',
   'Tiltmoji',
-  'Lore',
+  'Lore-auf Lock',
   'Fußfetisch',
 ] as const
 
 export const questions: Question[] = [
   {
     id: 'champions-100',
-    category: 'Champions',
+    category: 'Champ Select',
     value: 100,
     difficulty: 'easy',
     question: 'Welcher Champion ist als der Blinde Mönch bekannt?',
@@ -21,7 +21,7 @@ export const questions: Question[] = [
   },
   {
     id: 'champions-200',
-    category: 'Champions',
+    category: 'Champ Select',
     value: 200,
     difficulty: 'easy',
     question: 'Welcher Champion ruft seinen Tibbers als ultimative Fähigkeit?',
@@ -30,7 +30,7 @@ export const questions: Question[] = [
   },
   {
     id: 'champions-300',
-    category: 'Champions',
+    category: 'Champ Select',
     value: 300,
     difficulty: 'medium',
     question: 'Welcher Champion wechselt mit "Transform" zwischen Hammer- und Kanonenform?',
@@ -39,7 +39,7 @@ export const questions: Question[] = [
   },
   {
     id: 'champions-400',
-    category: 'Champions',
+    category: 'Champ Select',
     value: 400,
     difficulty: 'medium',
     question: 'Welcher Champion kann durch "Realm Warp" Verbündete an einen Zielort teleportieren?',
@@ -48,7 +48,7 @@ export const questions: Question[] = [
   },
   {
     id: 'champions-500',
-    category: 'Champions',
+    category: 'Champ Select',
     value: 500,
     difficulty: 'hard',
     question: 'Welcher Champion sammelt Mist, um Reichweite, kritische Trefferchance und Angriffstempo zu skalieren?',
@@ -107,7 +107,7 @@ export const questions: Question[] = [
   },
   {
     id: 'abilities-100',
-    category: 'Fähigkeiten',
+    category: 'Ability Abuse',
     value: 100,
     difficulty: 'easy',
     question: 'Welche Beschwörerzauber-Kombination ist besonders typisch für viele Marksmen auf der Botlane?',
@@ -116,7 +116,7 @@ export const questions: Question[] = [
   },
   {
     id: 'abilities-200',
-    category: 'Fähigkeiten',
+    category: 'Ability Abuse',
     value: 200,
     difficulty: 'easy',
     question: 'Wie heißt Yasuos Wand, die viele Projektile blockt?',
@@ -125,7 +125,7 @@ export const questions: Question[] = [
   },
   {
     id: 'abilities-300',
-    category: 'Fähigkeiten',
+    category: 'Ability Abuse',
     value: 300,
     difficulty: 'medium',
     question: 'Welche Art von Kontrolle verhindert Bewegung, aber nicht zwingend Autoattacks oder Zauber?',
@@ -134,7 +134,7 @@ export const questions: Question[] = [
   },
   {
     id: 'abilities-400',
-    category: 'Fähigkeiten',
+    category: 'Ability Abuse',
     value: 400,
     difficulty: 'medium',
     question: 'Welcher Champion nutzt "Moonlight", um seine Dash-Ultimate mehrfach zurückzusetzen?',
@@ -143,7 +143,7 @@ export const questions: Question[] = [
   },
   {
     id: 'abilities-500',
-    category: 'Fähigkeiten',
+    category: 'Ability Abuse',
     value: 500,
     difficulty: 'hard',
     question: 'Welche Mechanik beschreibt, dass ein Champion kurz nach einem Skill einen verstärkten normalen Angriff nutzt?',
@@ -156,7 +156,7 @@ export const questions: Question[] = [
     value: 100,
     difficulty: 'easy',
     question: 'Bildrätsel: Welcher Champion ist das?',
-    answer: 'Ekko',
+    answer: 'Rakkan',
     questionImage: 'question-images/tiltmoji-100-frage.png',
     explanation: 'Ersetze das Bild im Ordner public/question-images mit deiner eigenen Tiltmoji-PNG.',
   },
@@ -166,7 +166,7 @@ export const questions: Question[] = [
     value: 200,
     difficulty: 'easy',
     question: 'Bildrätsel: Welcher Champion ist das?',
-    answer: 'Fiora',
+    answer: 'Ezreal',
     questionImage: 'question-images/tiltmoji-200-frage.png',
     explanation: 'Ersetze das Bild im Ordner public/question-images mit deiner eigenen Tiltmoji-PNG.',
   },
@@ -176,7 +176,7 @@ export const questions: Question[] = [
     value: 300,
     difficulty: 'medium',
     question: 'Bildrätsel: Welcher Champion ist das?',
-    answer: 'Karma',
+    answer: 'Camille',
     questionImage: 'question-images/tiltmoji-300-frage.png',
     explanation: 'Ersetze das Bild im Ordner public/question-images mit deiner eigenen Tiltmoji-PNG.',
   },
@@ -186,7 +186,7 @@ export const questions: Question[] = [
     value: 400,
     difficulty: 'hard',
     question: 'Bildrätsel: Welcher Champion ist das?',
-    answer: 'Cassiopeia',
+    answer: 'Diana',
     questionImage: 'question-images/tiltmoji-400-frage.png',
     explanation: 'Ersetze das Bild im Ordner public/question-images mit deiner eigenen Tiltmoji-PNG.',
   },
@@ -196,13 +196,13 @@ export const questions: Question[] = [
     value: 500,
     difficulty: 'hard',
     question: 'Bildrätsel: Welcher Champion ist das?',
-    answer: 'Ezreal',
+    answer: 'Evelynn',
     questionImage: 'question-images/tiltmoji-500-frage.png',
     explanation: 'Ersetze das Bild im Ordner public/question-images mit deiner eigenen Tiltmoji-PNG.',
   },
   {
     id: 'lore-100',
-    category: 'Lore',
+    category: 'Lore-auf Lock',
     value: 100,
     difficulty: 'easy',
     question: 'Aus welcher Region stammt Garen?',
@@ -211,7 +211,7 @@ export const questions: Question[] = [
   },
   {
     id: 'lore-200',
-    category: 'Lore',
+    category: 'Lore-auf Lock',
     value: 200,
     difficulty: 'easy',
     question: 'Welche Stadt ist eng mit Fortschritt, Hextech und Piltover verbunden?',
@@ -220,7 +220,7 @@ export const questions: Question[] = [
   },
   {
     id: 'lore-300',
-    category: 'Lore',
+    category: 'Lore-auf Lock',
     value: 300,
     difficulty: 'medium',
     question: 'Welche unterirdische Schwesterstadt steht Piltover gegenüber?',
@@ -229,7 +229,7 @@ export const questions: Question[] = [
   },
   {
     id: 'lore-400',
-    category: 'Lore',
+    category: 'Lore-auf Lock',
     value: 400,
     difficulty: 'medium',
     question: 'Welche Region ist für Expansion, Militarismus und die Machtphilosophie "Stärke über alles" bekannt?',
@@ -238,7 +238,7 @@ export const questions: Question[] = [
   },
   {
     id: 'lore-500',
-    category: 'Lore',
+    category: 'Lore-auf Lock',
     value: 500,
     difficulty: 'hard',
     question: 'Wie heißt das gefährliche Leerengebiet im Süden Shurimas?',
