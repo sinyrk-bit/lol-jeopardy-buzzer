@@ -30,6 +30,16 @@ const emptyGameState: GameState = {
   requestedByTeamId: null,
 }
 
+function getNextTeamId(teams: Team[], currentTeamId: string | null) {
+  if (teams.length === 0) {
+    return null
+  }
+
+  const currentIndex = teams.findIndex((team) => team.id === currentTeamId)
+  const nextIndex = currentIndex === -1 ? 0 : (currentIndex + 1) % teams.length
+  return teams[nextIndex]?.id ?? null
+}
+
 function App() {
   const joinRoomId = useMemo(() => new URLSearchParams(window.location.search).get('join') ?? '', [])
   const [screen, setScreen] = useLocalStorage<Screen>('lol-jeopardy-screen', joinRoomId ? 'game' : 'home')
@@ -237,6 +247,7 @@ function App() {
         ...current,
         teams: current.teams.map((team) => (team.id === teamId ? { ...team, score: team.score + delta } : team)),
         usedQuestions,
+        activeTeamId: getNextTeamId(current.teams, current.activeTeamId),
         currentQuestion: null,
         showAnswer: false,
         gameFinished,
