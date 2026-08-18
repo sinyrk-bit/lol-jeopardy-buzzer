@@ -2,11 +2,11 @@
 
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/sinyrk-bit/lol-jeopardy-buzzer)
 
-Eine vollständige React- und TypeScript-Jeopardy-App, inspiriert von einem dunklen Fantasy-Esports-Showboard.
+Eine vollständige React- und TypeScript-Jeopardy-App, inspiriert von einem dunklen Cyberpunk-Showboard.
 
 ## Funktionen
 
-- 6 Kategorien mit 30 League-of-Legends-Fragen
+- 6 Kategorien mit 30 Fragen, inklusive einer reinen Bildkategorie
 - Team-Setup für 2 bis 4 Teams
 - animierte Hover-Effekte auf dem Jeopardy-Board
 - Frage- und Antwortablauf

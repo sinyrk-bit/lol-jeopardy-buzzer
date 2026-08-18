@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" role="img" aria-label="Bildfrage 500 Platzhalter">
+  <rect width="1280" height="720" fill="#030816"/>
+  <rect x="34" y="34" width="1212" height="652" fill="none" stroke="#00eaff" stroke-width="4"/>
+  <text x="640" y="330" fill="#ffe59b" font-family="Arial, sans-serif" font-size="64" font-weight="700" text-anchor="middle">BILDFRAGE 500</text>
+  <text x="640" y="420" fill="#a5b7d9" font-family="Arial, sans-serif" font-size="34" text-anchor="middle">Dieses SVG durch dein Fragebild ersetzen</text>
+</svg>
