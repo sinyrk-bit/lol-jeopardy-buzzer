@@ -18,6 +18,7 @@ A complete React + TypeScript Jeopardy game inspired by a dark fantasy esports s
 - invite link for friends through the built-in Render WebSocket room server
 - host-only answer preview before revealing answers to players
 - host-only controls for revealing answers, ending questions, assigning points, and moving players
+- cyberpunk PROJECT-style interface using an official Riot Data Dragon League splash asset
 - score persistence through `localStorage`
 - game over screen with ranking
 
@@ -66,3 +67,9 @@ Add images to `public/question-images/`, then reference them in `src/data/questi
   answerImage: 'question-images/lee-sin-answer.png',
 }
 ```
+
+## Visual Asset Source
+
+The cyberpunk background uses the official Riot Data Dragon champion splash asset for `PROJECT: Zed`:
+
+`https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Zed_3.jpg`
