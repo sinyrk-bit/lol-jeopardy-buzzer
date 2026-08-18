@@ -35,3 +35,33 @@ export type GameState = {
 }
 
 export type Screen = 'home' | 'setup' | 'game' | 'gameOver'
+
+export type NetworkRole = 'host' | 'player'
+
+export type NetworkStatus = 'idle' | 'connecting' | 'connected' | 'error'
+
+export type PublicGameSnapshot = {
+  state: GameState
+  screen: Screen
+  questionsTotal: number
+}
+
+export type HostMessage =
+  | {
+      type: 'snapshot'
+      payload: PublicGameSnapshot
+    }
+  | {
+      type: 'host-ready'
+      roomId: string
+    }
+
+export type PlayerMessage =
+  | {
+      type: 'join'
+      playerName: string
+    }
+  | {
+      type: 'buzz'
+      teamId: string
+    }

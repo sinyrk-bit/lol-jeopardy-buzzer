@@ -1,12 +1,16 @@
+import { useEffect, useMemo, useState } from 'react'
 import './App.css'
 import { GameBoard } from './components/GameBoard'
 import { GameOverScreen } from './components/GameOverScreen'
+import { HostRoomPanel } from './components/HostRoomPanel'
+import { PlayerView } from './components/PlayerView'
 import { QuestionCard } from './components/QuestionCard'
 import { Scoreboard } from './components/Scoreboard'
 import { SetupScreen } from './components/SetupScreen'
 import { questions } from './data/questions'
 import { useLocalStorage } from './hooks/useLocalStorage'
-import type { GameState, Question, Screen, Team } from './types/game'
+import { useRoom } from './hooks/useRoom'
+import type { GameState, PlayerMessage, Question, Screen, Team } from './types/game'
 
 const emptyGameState: GameState = {
   teams: [],
@@ -20,9 +24,84 @@ const emptyGameState: GameState = {
 }
 
 function App() {
-  const [screen, setScreen] = useLocalStorage<Screen>('lol-jeopardy-screen', 'home')
+  const joinRoomId = useMemo(() => new URLSearchParams(window.location.search).get('join') ?? '', [])
+  const [screen, setScreen] = useLocalStorage<Screen>('lol-jeopardy-screen', joinRoomId ? 'game' : 'home')
   const [gameState, setGameState] = useLocalStorage<GameState>('lol-jeopardy-state', emptyGameState)
+  const [playerName, setPlayerName] = useState('')
+  const [playerMode, setPlayerMode] = useState(Boolean(joinRoomId))
   const hasSavedGame = gameState.teams.length > 0 && !gameState.gameFinished
+
+  const buzz = (teamId: string) => {
+    setGameState((current) => {
+      if (current.buzzerLocked || current.buzzerQueue.some((entry) => entry.teamId === teamId)) {
+        return current
+      }
+
+      return {
+        ...current,
+        buzzerQueue: [
+          ...current.buzzerQueue,
+          {
+            teamId,
+            order: current.buzzerQueue.length + 1,
+            timestamp: Date.now(),
+          },
+        ],
+      }
+    })
+  }
+
+  const {
+    roomId,
+    inviteUrl,
+    status,
+    error,
+    guestCount,
+    lastSnapshot,
+    hostRoom,
+    joinRoom,
+    broadcastSnapshot,
+    sendBuzz,
+  } = useRoom({
+    initialRoomId: joinRoomId,
+    getSnapshot: () => ({
+      state: gameState,
+      screen,
+      questionsTotal: questions.length,
+    }),
+    onPlayerMessage: (message: PlayerMessage) => {
+      if (message.type === 'buzz') {
+        buzz(message.teamId)
+      }
+    },
+  })
+
+  useEffect(() => {
+    if (!joinRoomId || status !== 'idle') {
+      return
+    }
+
+    joinRoom(joinRoomId, playerName || 'Player')
+  }, [joinRoom, joinRoomId, playerName, status])
+
+  useEffect(() => {
+    if (playerMode && lastSnapshot) {
+      setGameState(lastSnapshot.state)
+      setScreen(lastSnapshot.screen)
+    }
+  }, [lastSnapshot, playerMode, setGameState, setScreen])
+
+  useEffect(() => {
+    if (playerMode || !inviteUrl) {
+      return
+    }
+
+    broadcastSnapshot({
+      state: gameState,
+      screen,
+      questionsTotal: questions.length,
+    })
+  }, [broadcastSnapshot, gameState, guestCount, inviteUrl, playerMode, screen])
 
   const startGame = (teams: Team[], wrongAnswerCostsPoints: boolean) => {
     setGameState({
@@ -30,6 +109,7 @@ function App() {
       teams,
       wrongAnswerCostsPoints,
     })
+    setPlayerMode(false)
     setScreen('game')
   }
 
@@ -39,6 +119,7 @@ function App() {
     }
 
     setGameState(emptyGameState)
+    setPlayerMode(false)
     setScreen('setup')
   }
 
@@ -84,24 +165,28 @@ function App() {
     })
   }
 
-  const buzz = (teamId: string) => {
-    setGameState((current) => {
-      if (current.buzzerLocked || current.buzzerQueue.some((entry) => entry.teamId === teamId)) {
-        return current
-      }
+  if (playerMode) {
+    if (!lastSnapshot) {
+      return (
+        <main className="join-screen">
+          <section className="home-content join-card">
+            <p className="eyebrow">Room {roomId || joinRoomId}</p>
+            <h1>Join the Rift</h1>
+            <label>
+              Name
+              <input value={playerName} onChange={(event) => setPlayerName(event.target.value)} placeholder="Dein Name" />
+            </label>
+            <button className="primary-button" type="button" onClick={() => joinRoom(joinRoomId, playerName || 'Player')}>
+              Verbinden
+            </button>
+            <p>{status === 'connected' ? 'Verbunden. Warte auf den Host.' : 'Verbinde mit Host...'}</p>
+            {error ? <p className="error-text">{error}</p> : null}
+          </section>
+        </main>
+      )
+    }
 
-      return {
-        ...current,
-        buzzerQueue: [
-          ...current.buzzerQueue,
-          {
-            teamId,
-            order: current.buzzerQueue.length + 1,
-            timestamp: Date.now(),
-          },
-        ],
-      }
-    })
+    return <PlayerView gameState={gameState} status={status} error={error} onBuzz={sendBuzz} />
   }
 
   if (screen === 'setup') {
@@ -119,6 +204,13 @@ function App() {
           <button className="brand-button" type="button" onClick={() => setScreen('home')}>
             League Jeopardy
           </button>
+          <HostRoomPanel
+            inviteUrl={inviteUrl}
+            status={status}
+            guestCount={guestCount}
+            error={error}
+            onStartRoom={hostRoom}
+          />
           <button className="secondary-button" type="button" onClick={newGame}>
             Neues Spiel
           </button>
@@ -157,14 +249,12 @@ function App() {
         <span />
       </div>
       <section className="home-content">
-        <p className="eyebrow">Runeterra Quiz Arena</p>
+        <p className="eyebrow">Project Neon Rift</p>
         <h1>League of Legends Jeopardy</h1>
-        <p>
-          Ein spielbereites Host-Board mit Teams, Punkten, Buzzer-Reihenfolge und Fragen von 100 bis 500.
-        </p>
+        <p>Cyberpunk-Showboard mit Host-Link, Live-Buzzer, Teams, Punkten und kompletter Fragenkontrolle.</p>
         <div className="screen-actions">
           <button className="primary-button" type="button" onClick={() => (hasSavedGame ? setScreen('game') : setScreen('setup'))}>
-            {hasSavedGame ? 'Spiel fortsetzen' : 'Spiel starten'}
+            {hasSavedGame ? 'Spiel fortsetzen' : 'Host-Spiel starten'}
           </button>
           <button className="secondary-button" type="button" onClick={() => setScreen('setup')}>
             Spiel konfigurieren

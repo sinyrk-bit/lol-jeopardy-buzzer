@@ -13,6 +13,8 @@ A complete React + TypeScript Jeopardy game inspired by a dark fantasy esports s
 - host-controlled scoring
 - configurable penalty for wrong answers
 - team buzzer system with queue, lock, and reset
+- invite link for friends through browser-to-browser PeerJS rooms
+- host-only controls for revealing answers, ending questions, and assigning points
 - score persistence through `localStorage`
 - game over screen with ranking
 
@@ -37,3 +39,7 @@ This repo includes `render.yaml` for a Render Static Site.
 
 - Build command: `npm install && npm run build`
 - Publish directory: `dist`
+
+## Multiplayer
+
+Start a host game, click `Link erstellen`, and share the generated URL. Friends join in player mode and can buzz for their team while the host keeps control of questions, answers, and scoring.
