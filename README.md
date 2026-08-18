@@ -18,6 +18,8 @@ Eine vollständige React- und TypeScript-Jeopardy-App, inspiriert von einem dunk
 - Einladungslink für Freunde über den eingebauten WebSocket-Raum-Server
 - Host sieht die Antwort privat, bevor sie für Spieler aufgedeckt wird
 - Host-Steuerung für Antworten, Fragenabschluss, Punktevergabe und Spielerwechsel
+- feste Team-Anzeige in Setup-Reihenfolge, damit Team 1 bis 4 nicht nach Punkten springen
+- Host wählt, welches Team die nächste Frage aussuchen darf
 - Cyberpunk-Oberfläche mit generiertem League-Schriftzug und offiziellem Riot-Data-Dragon-Splash-Art
 - Spielstand bleibt über `localStorage` gespeichert
 - Game-Over-Ansicht mit Rangliste
@@ -51,6 +53,8 @@ Render Static Sites können das Board anzeigen, aber nicht den WebSocket-Raum-Se
 Starte als Host ein Spiel, klicke auf `Link erstellen` und teile die erzeugte URL. Freunde treten in der Spieleransicht bei. Öffne als Host die `Lobby`, um verbundene Spieler Teams zuzuweisen; danach buzzert jeder Spieler nur für sein zugewiesenes Team.
 
 Der Host sieht die Antwort sofort im privaten Host-Panel. Spieler sehen sie erst, wenn der Host auf `Antwort für Spieler aufdecken` klickt.
+
+Die Team-Leiste bleibt immer in der Setup-Reihenfolge. Über `Auswahlrecht` legt der Host fest, welches Team die nächste Frage aussuchen darf; die Frage selbst wird weiterhin nur vom Host angeklickt und freigegeben.
 
 ## Bilder In Fragen
 

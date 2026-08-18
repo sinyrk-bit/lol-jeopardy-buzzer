@@ -4,20 +4,18 @@ import type { Player, Team } from '../types/game'
 type ScoreboardProps = {
   teams: Team[]
   players?: Player[]
+  activeTeamId?: string | null
 }
 
-export function Scoreboard({ teams, players = [] }: ScoreboardProps) {
-  const sortedTeams = [...teams].sort((a, b) => b.score - a.score)
-  const leadScore = sortedTeams[0]?.score ?? 0
-
+export function Scoreboard({ teams, players = [], activeTeamId = null }: ScoreboardProps) {
   return (
     <aside className="scoreboard" aria-label="Punktestand">
-      {sortedTeams.map((team, index) => {
+      {teams.map((team, index) => {
         const teamPlayers = players.filter((player) => player.teamId === team.id)
 
         return (
           <div
-            className={`team-score ${team.score === leadScore ? 'is-leading' : ''}`}
+            className={`team-score ${team.id === activeTeamId ? 'is-active-picker' : ''}`}
             key={team.id}
             style={{ '--team-color': team.color } as CSSProperties}
           >
@@ -27,6 +25,7 @@ export function Scoreboard({ teams, players = [] }: ScoreboardProps) {
               {teamPlayers.length > 0 ? (
                 <span className="team-players">{teamPlayers.map((player) => player.name).join(' / ')}</span>
               ) : null}
+              {team.id === activeTeamId ? <span className="team-turn">Sucht aus</span> : null}
             </div>
             <strong className="score-value" aria-live="polite">
               {team.score}

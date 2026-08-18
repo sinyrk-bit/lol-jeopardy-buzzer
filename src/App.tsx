@@ -9,6 +9,7 @@ import { QuestionStartOverlay } from './components/QuestionStartOverlay'
 import { QuestionCard } from './components/QuestionCard'
 import { Scoreboard } from './components/Scoreboard'
 import { SetupScreen } from './components/SetupScreen'
+import { TurnControl } from './components/TurnControl'
 import { questions } from './data/questions'
 import { useLocalStorage } from './hooks/useLocalStorage'
 import { useRoom } from './hooks/useRoom'
@@ -24,6 +25,7 @@ const emptyGameState: GameState = {
   buzzerQueue: [],
   buzzerLocked: true,
   players: [],
+  activeTeamId: null,
 }
 
 function App() {
@@ -35,6 +37,7 @@ function App() {
   const [showLobby, setShowLobby] = useState(false)
   const [pendingQuestion, setPendingQuestion] = useState<Question | null>(null)
   const players = useMemo(() => gameState.players ?? [], [gameState.players])
+  const activeTeamId = gameState.activeTeamId ?? gameState.teams[0]?.id ?? null
   const hasSavedGame = gameState.teams.length > 0 && !gameState.gameFinished
   const getQuestionValue = (question: Question, usedCount = gameState.usedQuestions.length) =>
     questions.length - usedCount <= 5 ? question.value * 2 : question.value
@@ -140,6 +143,7 @@ function App() {
       ...emptyGameState,
       teams,
       wrongAnswerCostsPoints,
+      activeTeamId: teams[0]?.id ?? null,
     })
     setPlayerMode(false)
     setScreen('game')
@@ -274,7 +278,12 @@ function App() {
           </button>
         </header>
 
-        <Scoreboard teams={gameState.teams} players={players} />
+        <Scoreboard teams={gameState.teams} players={players} activeTeamId={activeTeamId} />
+        <TurnControl
+          teams={gameState.teams}
+          activeTeamId={activeTeamId}
+          onSetActiveTeam={(teamId) => setGameState((current) => ({ ...current, activeTeamId: teamId }))}
+        />
 
         {gameState.currentQuestion ? (
           <QuestionCard
@@ -308,6 +317,7 @@ function App() {
             displayValue={getQuestionValue(pendingQuestion)}
             teams={gameState.teams}
             players={players}
+            activeTeamId={activeTeamId}
             onStartWithBuzzer={() => startPendingQuestion(true)}
             onStartWithoutBuzzer={() => startPendingQuestion(false)}
             onCancel={() => setPendingQuestion(null)}
@@ -320,6 +330,8 @@ function App() {
             status={status}
             players={players}
             teams={gameState.teams}
+            activeTeamId={activeTeamId}
+            onSetActiveTeam={(teamId) => setGameState((current) => ({ ...current, activeTeamId: teamId }))}
             onAssignPlayer={assignPlayer}
             onClose={() => setShowLobby(false)}
             onStartRoom={hostRoom}

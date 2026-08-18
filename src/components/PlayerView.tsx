@@ -32,7 +32,11 @@ export function PlayerView({ gameState, playerId, status, error, onBuzz }: Playe
       </header>
 
       {error ? <p className="error-text">{error}</p> : null}
-      <Scoreboard teams={gameState.teams} players={gameState.players ?? []} />
+      <Scoreboard
+        teams={gameState.teams}
+        players={gameState.players ?? []}
+        activeTeamId={gameState.activeTeamId ?? gameState.teams[0]?.id ?? null}
+      />
       <section className="player-team-strip">
         <p className="eyebrow">Dein Team</p>
         <strong>{assignedTeam ? assignedTeam.name : 'Warte auf Zuweisung durch den Host'}</strong>

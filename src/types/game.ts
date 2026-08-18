@@ -42,6 +42,7 @@ export type GameState = {
   buzzerQueue: BuzzerEntry[]
   buzzerLocked: boolean
   players: Player[]
+  activeTeamId: string | null
 }
 
 export type Screen = 'home' | 'setup' | 'game' | 'gameOver'

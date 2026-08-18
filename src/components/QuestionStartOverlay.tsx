@@ -7,6 +7,7 @@ type QuestionStartOverlayProps = {
   displayValue: number
   teams: Team[]
   players: Player[]
+  activeTeamId: string | null
   onStartWithBuzzer: () => void
   onStartWithoutBuzzer: () => void
   onCancel: () => void
@@ -17,6 +18,7 @@ export function QuestionStartOverlay({
   displayValue,
   teams,
   players,
+  activeTeamId,
   onStartWithBuzzer,
   onStartWithoutBuzzer,
   onCancel,
@@ -24,7 +26,7 @@ export function QuestionStartOverlay({
   return (
     <div className="overlay-backdrop" role="presentation">
       <section className="question-start-overlay" aria-label="Frage starten">
-        <Scoreboard teams={teams} players={players} />
+        <Scoreboard teams={teams} players={players} activeTeamId={activeTeamId} />
 
         <div className="question-start-panel">
           <div>
@@ -32,6 +34,7 @@ export function QuestionStartOverlay({
             <h2>
               {question.category} - {displayValue}
             </h2>
+            <p>{teams.find((team) => team.id === activeTeamId)?.name ?? 'Das ausgewählte Team'} hat diese Frage ausgesucht.</p>
           </div>
 
           <div className="question-start-preview">

@@ -6,6 +6,8 @@ type LobbyOverlayProps = {
   status: NetworkStatus
   players: Player[]
   teams: Team[]
+  activeTeamId: string | null
+  onSetActiveTeam: (teamId: string) => void
   onAssignPlayer: (playerId: string, teamId: string | null) => void
   onClose: () => void
   onStartRoom: () => void
@@ -16,6 +18,8 @@ export function LobbyOverlay({
   status,
   players,
   teams,
+  activeTeamId,
+  onSetActiveTeam,
   onAssignPlayer,
   onClose,
   onStartRoom,
@@ -30,7 +34,7 @@ export function LobbyOverlay({
     <div className="overlay-backdrop" role="presentation">
       <section className="lobby-overlay" aria-label="Host Lobby">
         <div className="overlay-score-strip">
-          <Scoreboard teams={teams} players={players} />
+          <Scoreboard teams={teams} players={players} activeTeamId={activeTeamId} />
         </div>
 
         <div className="lobby-header">
@@ -52,6 +56,25 @@ export function LobbyOverlay({
           <button className="primary-button" type="button" onClick={inviteUrl ? copyInvite : onStartRoom}>
             {inviteUrl ? 'Link kopieren' : 'Link erstellen'}
           </button>
+        </div>
+
+        <div className="turn-console">
+          <div>
+            <p className="eyebrow">Nächste Auswahl</p>
+            <strong>{teams.find((team) => team.id === activeTeamId)?.name ?? 'Kein Team ausgewählt'}</strong>
+          </div>
+          <div className="turn-team-buttons">
+            {teams.map((team, index) => (
+              <button
+                className={team.id === activeTeamId ? 'is-active' : ''}
+                key={team.id}
+                onClick={() => onSetActiveTeam(team.id)}
+                type="button"
+              >
+                {index + 1}
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="player-roster">
