@@ -6,7 +6,7 @@ Eine vollständige React- und TypeScript-Jeopardy-App, inspiriert von einem dunk
 
 ## Funktionen
 
-- 6 Kategorien mit 30 Fragen, inklusive einer reinen Bildkategorie
+- 6 Kategorien mit 30 Fragen, inklusive Schätzrunde und reiner Bildkategorie
 - Team-Setup für 2 bis 4 Teams
 - animierte Hover-Effekte auf dem Jeopardy-Board
 - Frage- und Antwortablauf
@@ -22,6 +22,7 @@ Eine vollständige React- und TypeScript-Jeopardy-App, inspiriert von einem dunk
 - Host wählt, welches Team die nächste Frage aussuchen darf
 - nach jeder abgeschlossenen Frage wandert das Auswahlrecht automatisch zum nächsten Team
 - nur das aktive Team kann die nächste Punkte-Kachel auswählen; der Host bestätigt die markierte Auswahl
+- `Kluft-Kalkulation` ist eine Schätzrunde: alle Fragen geben 300 Punkte, Gewinner ist das Team mit der nächsten Schätzung
 - Cyberpunk-Oberfläche mit generiertem League-Schriftzug und eigenem 16:9-Hintergrundbild
 - Spielstand bleibt über `localStorage` gespeichert
 - Game-Over-Ansicht mit Rangliste
@@ -57,6 +58,10 @@ Starte als Host ein Spiel, klicke auf `Link erstellen` und teile die erzeugte UR
 Der Host sieht die Antwort sofort im privaten Host-Panel. Spieler sehen sie erst, wenn der Host auf `Antwort für Spieler aufdecken` klickt.
 
 Die Team-Leiste bleibt immer in der Setup-Reihenfolge. Über `Auswahlrecht` legt der Host fest, welches Team die nächste Frage aussuchen darf. Nur Spieler aus diesem Team können auf dem Board eine Punkte-Kachel markieren; der Host sieht diese Markierung und klickt sie an, um die Frage mit oder ohne Buzzer freizugeben. Nach dem Abschluss der Frage springt das Auswahlrecht automatisch zum nächsten Team in der festen Reihenfolge.
+
+## Kluft-Kalkulation
+
+Die Kategorie `Kluft-Kalkulation` ersetzt die alte Item-Kategorie. Alle fünf Fragen sind Schätzfragen und geben immer 300 Punkte. Jedes Team schätzt für sich; nach dem Aufdecken klickt der Host bei dem Team auf `Am nächsten`, das am besten geschätzt hat.
 
 ## Bilder In Fragen
 

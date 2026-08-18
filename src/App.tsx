@@ -51,8 +51,13 @@ function App() {
   const players = useMemo(() => gameState.players ?? [], [gameState.players])
   const activeTeamId = gameState.activeTeamId ?? gameState.teams[0]?.id ?? null
   const hasSavedGame = gameState.teams.length > 0 && !gameState.gameFinished
-  const getQuestionValue = (question: Question, usedCount = gameState.usedQuestions.length) =>
-    questions.length - usedCount <= 5 ? question.value * 2 : question.value
+  const getQuestionValue = (question: Question, usedCount = gameState.usedQuestions.length) => {
+    if (question.mode === 'estimate') {
+      return 300
+    }
+
+    return questions.length - usedCount <= 5 ? question.value * 2 : question.value
+  }
 
   const buzz = (teamId: string) => {
     setGameState((current) => {
@@ -233,7 +238,7 @@ function App() {
       const delta =
         teamId && correct
           ? effectiveValue
-          : teamId && current.wrongAnswerCostsPoints
+          : teamId && current.wrongAnswerCostsPoints && current.currentQuestion.mode !== 'estimate'
             ? -Math.ceil(effectiveValue / 2)
             : 0
       const usedQuestions = Array.from(new Set([...current.usedQuestions, current.currentQuestion.id]))

@@ -36,6 +36,8 @@ export function QuestionCard({
   onResetBuzzers,
   onToggleBuzzerLock,
 }: QuestionCardProps) {
+  const isEstimateQuestion = question.mode === 'estimate'
+
   return (
     <section className="question-stage" aria-label="Aktuelle Frage">
       <div className="question-card">
@@ -81,20 +83,32 @@ export function QuestionCard({
         <section className="host-panel" aria-label="Host-Steuerung">
           <div>
             <p className="eyebrow">Punkte vergeben</p>
-            <h2>{wrongAnswerCostsPoints ? 'Falsch = halber Punktwert minus' : 'Falsche Antworten kosten nichts'}</h2>
+            <h2>
+              {isEstimateQuestion
+                ? 'Das Team mit der nächsten Schätzung bekommt die Punkte'
+                : wrongAnswerCostsPoints
+                  ? 'Falsch = halber Punktwert minus'
+                  : 'Falsche Antworten kosten nichts'}
+            </h2>
           </div>
           <div className="award-grid">
             {teams.map((team) => (
               <div className="award-card" key={team.id} style={{ '--team-color': team.color } as CSSProperties}>
                 <strong>{team.name}</strong>
-                <div>
+                {isEstimateQuestion ? (
                   <button type="button" onClick={() => onAward(team.id, true)}>
-                    Richtig
+                    Am nächsten
                   </button>
-                  <button type="button" onClick={() => onAward(team.id, false)}>
-                    Falsch
-                  </button>
-                </div>
+                ) : (
+                  <div>
+                    <button type="button" onClick={() => onAward(team.id, true)}>
+                      Richtig
+                    </button>
+                    <button type="button" onClick={() => onAward(team.id, false)}>
+                      Falsch
+                    </button>
+                  </div>
+                )}
               </div>
             ))}
           </div>

@@ -17,7 +17,7 @@ type PlayerViewProps = {
 export function PlayerView({ gameState, playerId, status, error, onBuzz, onPickQuestion }: PlayerViewProps) {
   const currentQuestion = gameState.currentQuestion
   const remaining = questions.length - gameState.usedQuestions.length
-  const displayValue = currentQuestion && remaining <= 5 ? currentQuestion.value * 2 : currentQuestion?.value
+  const displayValue = currentQuestion?.mode === 'estimate' ? 300 : currentQuestion && remaining <= 5 ? currentQuestion.value * 2 : currentQuestion?.value
   const currentPlayer = (gameState.players ?? []).find((player) => player.id === playerId)
   const assignedTeam = gameState.teams.find((team) => team.id === currentPlayer?.teamId)
   const activeTeamId = gameState.activeTeamId ?? gameState.teams[0]?.id ?? null
@@ -94,7 +94,9 @@ export function PlayerView({ gameState, playerId, status, error, onBuzz, onPickQ
         <GameBoard
           questions={questions}
           usedQuestions={gameState.usedQuestions}
-          getQuestionValue={(question) => (questions.length - gameState.usedQuestions.length <= 5 ? question.value * 2 : question.value)}
+          getQuestionValue={(question) =>
+            question.mode === 'estimate' ? 300 : questions.length - gameState.usedQuestions.length <= 5 ? question.value * 2 : question.value
+          }
           selectedQuestionId={gameState.requestedQuestionId ?? null}
           selectionLabel={gameState.requestedQuestionId ? 'Gewählt' : null}
           canSelectQuestion={isPickingTeam && !gameState.requestedQuestionId}

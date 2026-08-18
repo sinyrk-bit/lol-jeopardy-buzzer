@@ -825,6 +825,11 @@ p {
   margin-top: 7px;
 }
 
+.award-card > button {
+  margin-top: 7px;
+  width: 100%;
+}
+
 .award-card button:hover {
   border-color: var(--cyan);
 }
