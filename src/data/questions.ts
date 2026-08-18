@@ -4,7 +4,7 @@ export const categories = [
   'Champions',
   'Kluft-Kalkulation',
   'Fähigkeiten',
-  'Emoji-Quiz',
+  'Emoji Diff',
   'Lore',
   'Fußfetisch',
 ] as const
@@ -152,7 +152,7 @@ export const questions: Question[] = [
   },
   {
     id: 'emoji-100',
-    category: 'Emoji-Quiz',
+    category: 'Emoji Diff',
     value: 100,
     difficulty: 'easy',
     question: 'Emoji-Rätsel: 🐻🔥👧',
@@ -161,7 +161,7 @@ export const questions: Question[] = [
   },
   {
     id: 'emoji-200',
-    category: 'Emoji-Quiz',
+    category: 'Emoji Diff',
     value: 200,
     difficulty: 'easy',
     question: 'Emoji-Rätsel: 🐟🔱🌊',
@@ -170,7 +170,7 @@ export const questions: Question[] = [
   },
   {
     id: 'emoji-300',
-    category: 'Emoji-Quiz',
+    category: 'Emoji Diff',
     value: 300,
     difficulty: 'medium',
     question: 'Emoji-Rätsel: 🟨⚡🏃',
@@ -179,7 +179,7 @@ export const questions: Question[] = [
   },
   {
     id: 'emoji-400',
-    category: 'Emoji-Quiz',
+    category: 'Emoji Diff',
     value: 400,
     difficulty: 'hard',
     question: 'Emoji-Rätsel: 🧢💣🕒',
@@ -188,7 +188,7 @@ export const questions: Question[] = [
   },
   {
     id: 'emoji-500',
-    category: 'Emoji-Quiz',
+    category: 'Emoji Diff',
     value: 500,
     difficulty: 'hard',
     question: 'Emoji-Rätsel: 👁️🦑🌌',
