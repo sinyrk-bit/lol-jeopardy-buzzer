@@ -14,8 +14,10 @@ A complete React + TypeScript Jeopardy game inspired by a dark fantasy esports s
 - configurable penalty for wrong answers, now scored as half the question value
 - final 5 remaining questions become bonus questions worth double points
 - team buzzer system with queue, lock, and reset
+- live player lobby where the host assigns players to teams
 - invite link for friends through the built-in Render WebSocket room server
-- host-only controls for revealing answers, ending questions, and assigning points
+- host-only answer preview before revealing answers to players
+- host-only controls for revealing answers, ending questions, assigning points, and moving players
 - score persistence through `localStorage`
 - game over screen with ranking
 
@@ -41,9 +43,13 @@ This repo includes `render.yaml` for a Render Web Service that serves the app an
 - Build command: `npm install && npm run build`
 - Start command: `npm start`
 
+Render Static Sites can show the board, but they cannot run this app's WebSocket room server. For invite links that friends can join from home, use a Render Web Service or a temporary tunnel to the local `npm start` server.
+
 ## Multiplayer
 
-Start a host game, click `Link erstellen`, and share the generated URL. Friends join in player mode and can buzz for their team while the host keeps control of questions, answers, and scoring.
+Start a host game, click `Link erstellen`, and share the generated URL. Friends join in player mode. Open `Lobby` as host to move connected players into teams; after that each player only buzzes for their assigned team.
+
+The host sees the answer immediately in the private host panel. Players only see it after the host clicks `Antwort fuer Spieler aufdecken`.
 
 ## Images In Questions
 

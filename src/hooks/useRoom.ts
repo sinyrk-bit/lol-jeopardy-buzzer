@@ -9,9 +9,25 @@ type UseRoomOptions = {
 }
 
 const roomPrefix = 'lol-jp-'
+const playerIdStorageKey = 'lol-jeopardy-player-id'
 
 function makeRoomId() {
   return `${roomPrefix}${Math.random().toString(36).slice(2, 8)}`
+}
+
+function makePlayerId() {
+  return `player-${Math.random().toString(36).slice(2, 10)}-${Date.now().toString(36)}`
+}
+
+function getStoredPlayerId() {
+  const stored = window.localStorage.getItem(playerIdStorageKey)
+  if (stored) {
+    return stored
+  }
+
+  const next = makePlayerId()
+  window.localStorage.setItem(playerIdStorageKey, next)
+  return next
 }
 
 function getRoomServerUrl() {
@@ -30,6 +46,7 @@ function getRoomServerUrl() {
 
 export function useRoom({ initialRoomId, getSnapshot, onPlayerMessage, onHostMessage }: UseRoomOptions = {}) {
   const [roomId, setRoomId] = useState(initialRoomId ?? '')
+  const [playerId] = useState(getStoredPlayerId)
   const [status, setStatus] = useState<NetworkStatus>('idle')
   const [error, setError] = useState('')
   const [guestCount, setGuestCount] = useState(0)
@@ -96,7 +113,7 @@ export function useRoom({ initialRoomId, getSnapshot, onPlayerMessage, onHostMes
         } else if (message.type === 'error') {
           setError(message.message)
           setStatus('error')
-        } else if (message.type === 'buzz' || message.type === 'join') {
+        } else if (message.type === 'buzz' || message.type === 'player-joined' || message.type === 'player-left') {
           playerMessageRef.current?.(message)
         } else {
           hostMessageRef.current?.(message)
@@ -133,10 +150,10 @@ export function useRoom({ initialRoomId, getSnapshot, onPlayerMessage, onHostMes
       setRoomId(targetRoomId)
       isHostRef.current = false
       connectSocket((socket) => {
-        socket.send(JSON.stringify({ type: 'join-room', roomId: targetRoomId, playerName }))
+        socket.send(JSON.stringify({ type: 'join-room', roomId: targetRoomId, playerId, playerName }))
       })
     },
-    [connectSocket],
+    [connectSocket, playerId],
   )
 
   const broadcastSnapshot = useCallback(
@@ -148,17 +165,15 @@ export function useRoom({ initialRoomId, getSnapshot, onPlayerMessage, onHostMes
     [send],
   )
 
-  const sendBuzz = useCallback(
-    (teamId: string) => {
-      send({ type: 'buzz', teamId })
-    },
-    [send],
-  )
+  const sendBuzz = useCallback(() => {
+    send({ type: 'buzz', playerId })
+  }, [playerId, send])
 
   useEffect(() => closeRoom, [closeRoom])
 
   return {
     roomId,
+    playerId,
     inviteUrl,
     status,
     error,

@@ -6,9 +6,10 @@ type HostRoomPanelProps = {
   guestCount: number
   error: string
   onStartRoom: () => void
+  onOpenLobby: () => void
 }
 
-export function HostRoomPanel({ inviteUrl, status, guestCount, error, onStartRoom }: HostRoomPanelProps) {
+export function HostRoomPanel({ inviteUrl, status, guestCount, error, onStartRoom, onOpenLobby }: HostRoomPanelProps) {
   const copyInvite = async () => {
     if (inviteUrl) {
       await navigator.clipboard.writeText(inviteUrl)
@@ -22,9 +23,14 @@ export function HostRoomPanel({ inviteUrl, status, guestCount, error, onStartRoo
         <strong>{status === 'connected' ? `${guestCount} verbunden` : 'Offline'}</strong>
       </div>
       {inviteUrl ? <input readOnly value={inviteUrl} aria-label="Einladungslink" /> : null}
-      <button className="secondary-button" type="button" onClick={inviteUrl ? copyInvite : onStartRoom}>
-        {inviteUrl ? 'Link kopieren' : 'Link erstellen'}
-      </button>
+      <div className="room-actions">
+        <button className="secondary-button" type="button" onClick={inviteUrl ? copyInvite : onStartRoom}>
+          {inviteUrl ? 'Link kopieren' : 'Link erstellen'}
+        </button>
+        <button className="secondary-button" type="button" onClick={onOpenLobby}>
+          Lobby
+        </button>
+      </div>
       {error ? <small>{error}</small> : null}
     </section>
   )

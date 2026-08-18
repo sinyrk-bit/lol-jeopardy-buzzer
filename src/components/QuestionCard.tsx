@@ -45,18 +45,27 @@ export function QuestionCard({
         <h1>{question.question}</h1>
         <QuestionMedia src={question.questionImage} alt={`Bild zur Frage ${question.id}`} />
 
-        {!showAnswer ? (
-          <button className="primary-button" type="button" onClick={onShowAnswer}>
-            Antwort anzeigen
+        <div className="host-answer-preview">
+          <p className="eyebrow">Nur Host sieht die Antwort</p>
+          <h2>{question.answer}</h2>
+          <QuestionMedia src={question.answerImage} alt={`Bild zur Antwort ${question.id}`} />
+          {question.explanation ? <p>{question.explanation}</p> : null}
+        </div>
+
+        <div className="screen-actions">
+          <button className="primary-button" disabled={showAnswer} type="button" onClick={onShowAnswer}>
+            {showAnswer ? 'Antwort ist aufgedeckt' : 'Antwort fuer Spieler aufdecken'}
           </button>
-        ) : (
-          <div className="answer-block">
-            <p className="eyebrow">Antwort</p>
+        </div>
+
+        {showAnswer ? (
+          <div className="answer-block public-answer">
+            <p className="eyebrow">Jetzt sichtbar fuer Spieler</p>
             <h2>{question.answer}</h2>
             <QuestionMedia src={question.answerImage} alt={`Bild zur Antwort ${question.id}`} />
             {question.explanation ? <p>{question.explanation}</p> : null}
           </div>
-        )}
+        ) : null}
       </div>
 
       <BuzzerPanel

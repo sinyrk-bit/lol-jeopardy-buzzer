@@ -19,6 +19,13 @@ export type Team = {
   score: number
 }
 
+export type Player = {
+  id: string
+  name: string
+  teamId: string | null
+  connected: boolean
+}
+
 export type BuzzerEntry = {
   teamId: string
   order: number
@@ -34,6 +41,7 @@ export type GameState = {
   wrongAnswerCostsPoints: boolean
   buzzerQueue: BuzzerEntry[]
   buzzerLocked: boolean
+  players: Player[]
 }
 
 export type Screen = 'home' | 'setup' | 'game' | 'gameOver'
@@ -60,10 +68,14 @@ export type HostMessage =
 
 export type PlayerMessage =
   | {
-      type: 'join'
-      playerName: string
+      type: 'player-joined'
+      player: Player
+    }
+  | {
+      type: 'player-left'
+      playerId: string
     }
   | {
       type: 'buzz'
-      teamId: string
+      playerId: string
     }

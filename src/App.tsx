@@ -3,6 +3,7 @@ import './App.css'
 import { GameBoard } from './components/GameBoard'
 import { GameOverScreen } from './components/GameOverScreen'
 import { HostRoomPanel } from './components/HostRoomPanel'
+import { LobbyOverlay } from './components/LobbyOverlay'
 import { PlayerView } from './components/PlayerView'
 import { QuestionCard } from './components/QuestionCard'
 import { Scoreboard } from './components/Scoreboard'
@@ -10,7 +11,7 @@ import { SetupScreen } from './components/SetupScreen'
 import { questions } from './data/questions'
 import { useLocalStorage } from './hooks/useLocalStorage'
 import { useRoom } from './hooks/useRoom'
-import type { GameState, PlayerMessage, Question, Screen, Team } from './types/game'
+import type { GameState, Player, PlayerMessage, Question, Screen, Team } from './types/game'
 
 const emptyGameState: GameState = {
   teams: [],
@@ -21,6 +22,7 @@ const emptyGameState: GameState = {
   wrongAnswerCostsPoints: true,
   buzzerQueue: [],
   buzzerLocked: false,
+  players: [],
 }
 
 function App() {
@@ -29,6 +31,8 @@ function App() {
   const [gameState, setGameState] = useLocalStorage<GameState>('lol-jeopardy-state', emptyGameState)
   const [playerName, setPlayerName] = useState('')
   const [playerMode, setPlayerMode] = useState(Boolean(joinRoomId))
+  const [showLobby, setShowLobby] = useState(false)
+  const players = useMemo(() => gameState.players ?? [], [gameState.players])
   const hasSavedGame = gameState.teams.length > 0 && !gameState.gameFinished
   const getQuestionValue = (question: Question, usedCount = gameState.usedQuestions.length) =>
     questions.length - usedCount <= 5 ? question.value * 2 : question.value
@@ -60,6 +64,7 @@ function App() {
     error,
     guestCount,
     lastSnapshot,
+    playerId,
     hostRoom,
     joinRoom,
     broadcastSnapshot,
@@ -67,24 +72,47 @@ function App() {
   } = useRoom({
     initialRoomId: joinRoomId,
     getSnapshot: () => ({
-      state: gameState,
+      state: { ...gameState, players },
       screen,
       questionsTotal: questions.length,
     }),
     onPlayerMessage: (message: PlayerMessage) => {
       if (message.type === 'buzz') {
-        buzz(message.teamId)
+        const player = players.find((candidate) => candidate.id === message.playerId)
+        if (player?.teamId) {
+          buzz(player.teamId)
+        }
+      }
+
+      if (message.type === 'player-joined') {
+        setGameState((current) => {
+          const currentPlayers = current.players ?? []
+          const knownPlayer = currentPlayers.find((player) => player.id === message.player.id)
+          const nextPlayer: Player = {
+            ...message.player,
+            teamId: knownPlayer?.teamId ?? message.player.teamId ?? null,
+            connected: true,
+          }
+
+          return {
+            ...current,
+            players: knownPlayer
+              ? currentPlayers.map((player) => (player.id === message.player.id ? nextPlayer : player))
+              : [...currentPlayers, nextPlayer],
+          }
+        })
+      }
+
+      if (message.type === 'player-left') {
+        setGameState((current) => ({
+          ...current,
+          players: (current.players ?? []).map((player) =>
+            player.id === message.playerId ? { ...player, connected: false } : player,
+          ),
+        }))
       }
     },
   })
-
-  useEffect(() => {
-    if (!joinRoomId || status !== 'idle') {
-      return
-    }
-
-    joinRoom(joinRoomId, playerName || 'Player')
-  }, [joinRoom, joinRoomId, playerName, status])
 
   useEffect(() => {
     if (playerMode && lastSnapshot) {
@@ -99,11 +127,11 @@ function App() {
     }
 
     broadcastSnapshot({
-      state: gameState,
+      state: { ...gameState, players },
       screen,
       questionsTotal: questions.length,
     })
-  }, [broadcastSnapshot, gameState, guestCount, inviteUrl, playerMode, screen])
+  }, [broadcastSnapshot, gameState, guestCount, inviteUrl, playerMode, players, screen])
 
   const startGame = (teams: Team[], wrongAnswerCostsPoints: boolean) => {
     setGameState({
@@ -113,6 +141,13 @@ function App() {
     })
     setPlayerMode(false)
     setScreen('game')
+  }
+
+  const assignPlayer = (assignedPlayerId: string, teamId: string | null) => {
+    setGameState((current) => ({
+      ...current,
+      players: (current.players ?? []).map((player) => (player.id === assignedPlayerId ? { ...player, teamId } : player)),
+    }))
   }
 
   const newGame = () => {
@@ -189,7 +224,15 @@ function App() {
       )
     }
 
-    return <PlayerView gameState={gameState} status={status} error={error} onBuzz={sendBuzz} />
+    return (
+      <PlayerView
+        gameState={{ ...gameState, players }}
+        playerId={playerId}
+        status={status}
+        error={error}
+        onBuzz={sendBuzz}
+      />
+    )
   }
 
   if (screen === 'setup') {
@@ -213,6 +256,7 @@ function App() {
             guestCount={guestCount}
             error={error}
             onStartRoom={hostRoom}
+            onOpenLobby={() => setShowLobby(true)}
           />
           <button className="secondary-button" type="button" onClick={newGame}>
             Neues Spiel
@@ -246,6 +290,18 @@ function App() {
             onSelectQuestion={openQuestion}
           />
         )}
+
+        {showLobby ? (
+          <LobbyOverlay
+            inviteUrl={inviteUrl}
+            status={status}
+            players={players}
+            teams={gameState.teams}
+            onAssignPlayer={assignPlayer}
+            onClose={() => setShowLobby(false)}
+            onStartRoom={hostRoom}
+          />
+        ) : null}
       </main>
     )
   }

@@ -27,7 +27,8 @@ function send(socket, payload) {
 }
 
 function getRoom(roomId) {
-  const room = rooms.get(roomId) ?? { host: null, guests: new Set(), lastSnapshot: null }
+  const room =
+    rooms.get(roomId) ?? { host: null, guests: new Map(), lastSnapshot: null, players: new Map() }
   rooms.set(roomId, room)
   return room
 }
@@ -61,6 +62,7 @@ const wss = new WebSocketServer({ server, path: '/rooms' })
 wss.on('connection', (socket) => {
   let currentRoomId = ''
   let isHost = false
+  let currentPlayerId = ''
 
   socket.on('message', (raw) => {
     let message
@@ -90,8 +92,17 @@ wss.on('connection', (socket) => {
         return
       }
 
-      room.guests.add(socket)
-      send(room.host, { type: 'join', playerName: message.playerName ?? 'Player' })
+      currentPlayerId = message.playerId || `guest-${Math.random().toString(36).slice(2, 10)}`
+      room.guests.set(socket, currentPlayerId)
+      const previousPlayer = room.players.get(currentPlayerId)
+      const player = {
+        id: currentPlayerId,
+        name: String(message.playerName ?? previousPlayer?.name ?? 'Player').slice(0, 32),
+        teamId: previousPlayer?.teamId ?? null,
+        connected: true,
+      }
+      room.players.set(currentPlayerId, player)
+      send(room.host, { type: 'player-joined', player })
       if (room.lastSnapshot) {
         send(socket, { type: 'snapshot', payload: room.lastSnapshot })
       }
@@ -106,12 +117,12 @@ wss.on('connection', (socket) => {
 
     if (message.type === 'snapshot' && isHost) {
       room.lastSnapshot = message.payload
-      room.guests.forEach((guest) => send(guest, { type: 'snapshot', payload: message.payload }))
+      room.guests.forEach((_playerId, guest) => send(guest, { type: 'snapshot', payload: message.payload }))
       return
     }
 
     if (message.type === 'buzz' && !isHost && room.host) {
-      send(room.host, { type: 'buzz', teamId: message.teamId })
+      send(room.host, { type: 'buzz', playerId: currentPlayerId || message.playerId })
     }
   })
 
@@ -123,9 +134,19 @@ wss.on('connection', (socket) => {
 
     if (isHost && room.host === socket) {
       room.host = null
-      room.guests.forEach((guest) => send(guest, { type: 'error', message: 'Host hat den Raum verlassen.' }))
+      room.guests.forEach((_playerId, guest) => send(guest, { type: 'error', message: 'Host hat den Raum verlassen.' }))
     } else {
+      const playerId = room.guests.get(socket)
       room.guests.delete(socket)
+      if (playerId) {
+        const player = room.players.get(playerId)
+        if (player) {
+          room.players.set(playerId, { ...player, connected: false })
+        }
+        if (room.host) {
+          send(room.host, { type: 'player-left', playerId })
+        }
+      }
     }
 
     broadcastGuestCount(currentRoomId)
