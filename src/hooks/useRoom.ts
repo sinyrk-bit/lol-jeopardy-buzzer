@@ -126,7 +126,7 @@ export function useRoom({ initialRoomId, getSnapshot, onPlayerMessage, onHostMes
 
       socket.addEventListener('error', () => {
         setStatus('error')
-        setError('Room-Server nicht erreichbar.')
+        setError('Raum-Server nicht erreichbar.')
       })
     },
     [closeRoom],

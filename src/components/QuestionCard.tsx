@@ -54,13 +54,13 @@ export function QuestionCard({
 
         <div className="screen-actions">
           <button className="primary-button" disabled={showAnswer} type="button" onClick={onShowAnswer}>
-            {showAnswer ? 'Antwort ist aufgedeckt' : 'Antwort fuer Spieler aufdecken'}
+            {showAnswer ? 'Antwort ist aufgedeckt' : 'Antwort für Spieler aufdecken'}
           </button>
         </div>
 
         {showAnswer ? (
           <div className="answer-block public-answer">
-            <p className="eyebrow">Jetzt sichtbar fuer Spieler</p>
+            <p className="eyebrow">Jetzt sichtbar für Spieler</p>
             <h2>{question.answer}</h2>
             <QuestionMedia src={question.answerImage} alt={`Bild zur Antwort ${question.id}`} />
             {question.explanation ? <p>{question.explanation}</p> : null}
@@ -103,7 +103,7 @@ export function QuestionCard({
               Niemand richtig
             </button>
             <button className="secondary-button" type="button" onClick={onBackToBoard}>
-              Zurueck zum Board
+              Zurück zum Board
             </button>
           </div>
         </section>

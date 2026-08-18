@@ -25,7 +25,7 @@ export function PlayerView({ gameState, playerId, status, error, onBuzz }: Playe
     <main className="player-layout">
       <header className="player-header">
         <div>
-          <p className="eyebrow">Player View</p>
+          <p className="eyebrow">Spieleransicht</p>
           <h1>League Jeopardy</h1>
         </div>
         <strong className={`connection-pill is-${status}`}>{status}</strong>

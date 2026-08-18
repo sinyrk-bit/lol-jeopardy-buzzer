@@ -11,7 +11,7 @@ export function GameOverScreen({ teams, onNewGame }: GameOverScreenProps) {
 
   return (
     <main className="game-over">
-      <p className="eyebrow">Game Over</p>
+      <p className="eyebrow">Spiel vorbei</p>
       <h1>{winner?.name ?? 'Kein Sieger'}</h1>
       <p className="winner-score">{winner?.score ?? 0} Punkte</p>
 

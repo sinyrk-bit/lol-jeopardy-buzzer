@@ -219,16 +219,16 @@ function App() {
       return (
         <main className="join-screen">
           <section className="home-content join-card">
-            <p className="eyebrow">Room {roomId || joinRoomId}</p>
-            <h1>Join the Rift</h1>
+            <p className="eyebrow">Raum {roomId || joinRoomId}</p>
+            <h1>Der Kluft beitreten</h1>
             <label>
               Name
               <input value={playerName} onChange={(event) => setPlayerName(event.target.value)} placeholder="Dein Name" />
             </label>
-            <button className="primary-button" type="button" onClick={() => joinRoom(joinRoomId, playerName || 'Player')}>
+            <button className="primary-button" type="button" onClick={() => joinRoom(joinRoomId, playerName || 'Spieler')}>
               Verbinden
             </button>
-            <p>{status === 'connected' ? 'Verbunden. Warte auf den Host.' : 'Verbinde mit Host...'}</p>
+            <p>{status === 'connected' ? 'Verbunden. Warte auf den Host.' : 'Verbinde mit dem Host...'}</p>
             {error ? <p className="error-text">{error}</p> : null}
           </section>
         </main>
@@ -337,7 +337,7 @@ function App() {
         <span />
       </div>
       <section className="home-content">
-        <p className="eyebrow">Project Neon Rift</p>
+        <p className="eyebrow">Projekt Neon-Kluft</p>
         <h1>League of Legends Jeopardy</h1>
         <p>Cyberpunk-Showboard mit Host-Link, Live-Buzzer, Teams, Punkten und kompletter Fragenkontrolle.</p>
         <div className="screen-actions">

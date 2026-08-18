@@ -19,7 +19,7 @@ export function HostRoomPanel({ inviteUrl, status, guestCount, error, onStartRoo
   return (
     <section className="room-panel" aria-label="Freunde einladen">
       <div>
-        <p className="eyebrow">Host Room</p>
+        <p className="eyebrow">Host-Raum</p>
         <strong>{status === 'connected' ? `${guestCount} verbunden` : 'Offline'}</strong>
       </div>
       {inviteUrl ? <input readOnly value={inviteUrl} aria-label="Einladungslink" /> : null}

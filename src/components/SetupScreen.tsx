@@ -81,13 +81,13 @@ export function SetupScreen({ onStart, onBack }: SetupScreenProps) {
             type="checkbox"
             onChange={(event) => setWrongAnswerCostsPoints(event.target.checked)}
           />
-          <span>Falsche Antworten ziehen den Punktwert ab</span>
+          <span>Falsche Antworten ziehen den halben Punktwert ab</span>
         </label>
       </section>
 
       <div className="screen-actions">
         <button className="secondary-button" type="button" onClick={onBack}>
-          Zurueck
+          Zurück
         </button>
         <button className="primary-button" type="button" onClick={startGame}>
           Spiel starten

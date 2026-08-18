@@ -69,7 +69,7 @@ wss.on('connection', (socket) => {
     try {
       message = JSON.parse(String(raw))
     } catch {
-      send(socket, { type: 'error', message: 'Invalid room message.' })
+      send(socket, { type: 'error', message: 'Ungültige Raum-Nachricht.' })
       return
     }
 
@@ -97,7 +97,7 @@ wss.on('connection', (socket) => {
       const previousPlayer = room.players.get(currentPlayerId)
       const player = {
         id: currentPlayerId,
-        name: String(message.playerName ?? previousPlayer?.name ?? 'Player').slice(0, 32),
+        name: String(message.playerName ?? previousPlayer?.name ?? 'Spieler').slice(0, 32),
         teamId: previousPlayer?.teamId ?? null,
         connected: true,
       }

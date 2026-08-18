@@ -28,7 +28,7 @@ export function QuestionStartOverlay({
 
         <div className="question-start-panel">
           <div>
-            <p className="eyebrow">Host entscheidet vor Reveal</p>
+            <p className="eyebrow">Host entscheidet vor dem Aufdecken</p>
             <h2>
               {question.category} - {displayValue}
             </h2>

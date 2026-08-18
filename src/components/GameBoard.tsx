@@ -33,7 +33,7 @@ export function GameBoard({ questions, usedQuestions, getQuestionValue, onSelect
                 key={`${category}-${value}`}
                 onClick={() => question && onSelectQuestion(question)}
                 type="button"
-                aria-label={`${category} fuer ${value} Punkte`}
+                aria-label={`${category} für ${value} Punkte`}
               >
                 <span>{isUsed ? 'Gespielt' : question && getQuestionValue ? getQuestionValue(question) : value}</span>
                 {!isUsed && question && getQuestionValue && getQuestionValue(question) > question.value ? <em>Bonus</em> : null}

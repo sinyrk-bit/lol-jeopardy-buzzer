@@ -35,17 +35,17 @@ export function LobbyOverlay({
 
         <div className="lobby-header">
           <div>
-            <p className="eyebrow">Host Control Overlay</p>
+            <p className="eyebrow">Host-Steuerung</p>
             <h2>Lobby & Teams</h2>
           </div>
           <button className="secondary-button" type="button" onClick={onClose}>
-            Schliessen
+            Schließen
           </button>
         </div>
 
         <div className="invite-console">
           <div>
-            <p className="eyebrow">Invite Link</p>
+            <p className="eyebrow">Einladungslink</p>
             <strong>{status === 'connected' ? 'Raum online' : 'Raum offline'}</strong>
           </div>
           {inviteUrl ? <input readOnly value={inviteUrl} aria-label="Einladungslink" /> : null}

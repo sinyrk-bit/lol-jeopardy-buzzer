@@ -1,8 +1,8 @@
-# Question Images
+# Fragebilder
 
-Put your own question and answer images in this folder.
+Lege deine eigenen Frage- und Antwortbilder in diesem Ordner ab.
 
-Use them in `src/data/questions.ts` like this:
+Verwende sie in `src/data/questions.ts` so:
 
 ```ts
 {
@@ -16,4 +16,4 @@ Use them in `src/data/questions.ts` like this:
 }
 ```
 
-Supported browser formats include `.png`, `.jpg`, `.jpeg`, `.webp`, and `.svg`.
+Unterstützte Browser-Formate sind `.png`, `.jpg`, `.jpeg`, `.webp` und `.svg`.
