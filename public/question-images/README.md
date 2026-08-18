@@ -16,7 +16,7 @@ Verwende sie in `src/data/questions.ts` so:
 }
 ```
 
-Unterstützte Browser-Formate sind `.png`, `.jpg`, `.jpeg`, `.webp` und `.svg`. Für die Kategorie `Fußfetisch` sind die Pfade aber bereits fest auf `.png` eingestellt.
+Unterstützte Browser-Formate sind `.png`, `.jpg`, `.jpeg`, `.webp` und `.svg`. Für die Kategorien `Fußfetisch` und `Tiltmoji` sind die Pfade aber bereits fest auf `.png` eingestellt.
 
 ## Kategorie Fussfetisch
 
@@ -34,5 +34,17 @@ Die Kategorie `Fußfetisch` ist in `src/data/questions.ts` fertig eingetragen un
 - `fussfetisch-500-antwort.png`
 
 Wenn du eigene Bilder nutzen willst, lege sie in diesen Ordner und ersetze die PNG-Dateien direkt mit exakt gleichem Dateinamen.
+
+## Kategorie Tiltmoji
+
+Die Kategorie `Tiltmoji` nutzt aktuell diese PNG-Dateien als Fragebilder. Die Antwort bleibt jeweils nur der Championname:
+
+- `tiltmoji-100-frage.png` = Ekko
+- `tiltmoji-200-frage.png` = Fiora
+- `tiltmoji-300-frage.png` = Karma
+- `tiltmoji-400-frage.png` = Cassiopeia
+- `tiltmoji-500-frage.png` = Ezreal
+
+Wenn du deine eigenen Emoji-Bilder nutzen willst, ersetze diese PNG-Dateien direkt mit exakt gleichem Dateinamen.
 
 Wichtig: Verwende nur Bilder, für die du die Rechte hast und die legal sowie passend für deine Mitspieler sind.
