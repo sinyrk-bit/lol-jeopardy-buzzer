@@ -20,13 +20,13 @@ function makePlayerId() {
 }
 
 function getStoredPlayerId() {
-  const stored = window.localStorage.getItem(playerIdStorageKey)
+  const stored = window.sessionStorage.getItem(playerIdStorageKey)
   if (stored) {
     return stored
   }
 
   const next = makePlayerId()
-  window.localStorage.setItem(playerIdStorageKey, next)
+  window.sessionStorage.setItem(playerIdStorageKey, next)
   return next
 }
 

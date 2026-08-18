@@ -390,8 +390,8 @@ p {
   border-radius: 4px;
   display: grid;
   gap: 7px;
-  grid-template-columns: 24px 1fr auto;
-  min-height: 48px;
+  grid-template-columns: 24px minmax(0, 1fr) auto;
+  min-height: 50px;
   padding: 7px 9px;
 }
 
@@ -405,11 +405,25 @@ p {
   font-weight: 900;
 }
 
-.team-name {
+.team-score-main {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.team-name,
+.team-players {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.team-players {
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
 }
 
 .score-value {

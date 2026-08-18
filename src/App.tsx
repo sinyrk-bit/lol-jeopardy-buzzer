@@ -263,7 +263,7 @@ function App() {
           </button>
         </header>
 
-        <Scoreboard teams={gameState.teams} />
+        <Scoreboard teams={gameState.teams} players={players} />
 
         {gameState.currentQuestion ? (
           <QuestionCard

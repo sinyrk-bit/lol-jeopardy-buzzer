@@ -30,7 +30,7 @@ export function LobbyOverlay({
     <div className="overlay-backdrop" role="presentation">
       <section className="lobby-overlay" aria-label="Host Lobby">
         <div className="overlay-score-strip">
-          <Scoreboard teams={teams} />
+          <Scoreboard teams={teams} players={players} />
         </div>
 
         <div className="lobby-header">
