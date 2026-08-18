@@ -70,6 +70,6 @@ Add images to `public/question-images/`, then reference them in `src/data/questi
 
 ## Visual Asset Source
 
-The cyberpunk background uses the provided League of Legends logo image as the main hologram layer and the official Riot Data Dragon champion splash asset for `PROJECT: Zed` as an atmospheric layer:
+The cyberpunk background uses the generated 16:9 SVG title asset at `src/assets/league-cyberpunk-title.svg` as the main hologram layer and the official Riot Data Dragon champion splash asset for `PROJECT: Zed` as an atmospheric layer:
 
 `https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Zed_3.jpg`

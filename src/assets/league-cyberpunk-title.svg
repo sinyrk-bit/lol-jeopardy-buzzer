@@ -1,0 +1,116 @@
+<svg width="1920" height="1080" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="night" x1="0" y1="0" x2="1920" y2="1080" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#02030B"/>
+      <stop offset="0.42" stop-color="#08172D"/>
+      <stop offset="0.68" stop-color="#130827"/>
+      <stop offset="1" stop-color="#01020A"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="430" y1="300" x2="1490" y2="760" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFE9A6"/>
+      <stop offset="0.16" stop-color="#C89B3C"/>
+      <stop offset="0.34" stop-color="#FFF1B8"/>
+      <stop offset="0.54" stop-color="#A66E20"/>
+      <stop offset="0.78" stop-color="#FFE59B"/>
+      <stop offset="1" stop-color="#7D551F"/>
+    </linearGradient>
+    <linearGradient id="edge" x1="324" y1="312" x2="1596" y2="768" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00EAFF"/>
+      <stop offset="0.5" stop-color="#FF1FBF"/>
+      <stop offset="1" stop-color="#B6FF3B"/>
+    </linearGradient>
+    <filter id="neon" x="-20%" y="-40%" width="140%" height="180%" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="0" stdDeviation="10" flood-color="#00EAFF" flood-opacity="0.9"/>
+      <feDropShadow dx="0" dy="0" stdDeviation="22" flood-color="#FF1FBF" flood-opacity="0.55"/>
+      <feDropShadow dx="0" dy="0" stdDeviation="36" flood-color="#C89B3C" flood-opacity="0.32"/>
+    </filter>
+    <filter id="deepShadow" x="-20%" y="-30%" width="140%" height="160%" color-interpolation-filters="sRGB">
+      <feDropShadow dx="10" dy="16" stdDeviation="7" flood-color="#000000" flood-opacity="0.78"/>
+    </filter>
+    <pattern id="grid" width="72" height="72" patternUnits="userSpaceOnUse">
+      <path d="M72 0H0V72" stroke="#00EAFF" stroke-opacity="0.12" stroke-width="1"/>
+    </pattern>
+    <pattern id="scan" width="6" height="6" patternUnits="userSpaceOnUse">
+      <path d="M0 0H6" stroke="white" stroke-opacity="0.13" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect width="1920" height="1080" fill="url(#night)"/>
+  <rect width="1920" height="1080" fill="url(#grid)"/>
+  <path d="M-40 825L1960 238" stroke="#00EAFF" stroke-opacity="0.22" stroke-width="5"/>
+  <path d="M-80 315L2020 905" stroke="#FF1FBF" stroke-opacity="0.2" stroke-width="4"/>
+  <path d="M185 980L560 95H1378L1738 980" stroke="#C89B3C" stroke-opacity="0.16" stroke-width="9"/>
+  <path d="M290 914L650 164H1278L1622 914" stroke="#00EAFF" stroke-opacity="0.12" stroke-width="3"/>
+  <ellipse cx="960" cy="540" rx="700" ry="310" fill="#00EAFF" fill-opacity="0.1"/>
+  <ellipse cx="1120" cy="500" rx="520" ry="260" fill="#FF1FBF" fill-opacity="0.09"/>
+  <rect width="1920" height="1080" fill="url(#scan)" opacity="0.42"/>
+  <rect width="1920" height="1080" fill="black" opacity="0.34"/>
+
+  <g filter="url(#neon)" opacity="0.95">
+    <path d="M355 718H1566" stroke="url(#edge)" stroke-width="3" stroke-linecap="round"/>
+    <path d="M405 325H1515" stroke="url(#edge)" stroke-width="3" stroke-linecap="round"/>
+    <path d="M250 520H1670" stroke="#00EAFF" stroke-opacity="0.22" stroke-width="2"/>
+    <path d="M310 578H1610" stroke="#FF1FBF" stroke-opacity="0.2" stroke-width="2"/>
+  </g>
+
+  <g filter="url(#deepShadow)">
+    <text x="960" y="490"
+      text-anchor="middle"
+      font-family="Cinzel, Trajan Pro, Times New Roman, serif"
+      font-size="178"
+      font-weight="900"
+      letter-spacing="8"
+      fill="#06101F"
+      stroke="url(#edge)"
+      stroke-width="10"
+      paint-order="stroke fill">
+      LEAGUE OF
+    </text>
+    <text x="960" y="690"
+      text-anchor="middle"
+      font-family="Cinzel, Trajan Pro, Times New Roman, serif"
+      font-size="188"
+      font-weight="900"
+      letter-spacing="7"
+      fill="#06101F"
+      stroke="url(#edge)"
+      stroke-width="10"
+      paint-order="stroke fill">
+      LEGENDS
+    </text>
+  </g>
+
+  <g filter="url(#neon)">
+    <text x="960" y="490"
+      text-anchor="middle"
+      font-family="Cinzel, Trajan Pro, Times New Roman, serif"
+      font-size="178"
+      font-weight="900"
+      letter-spacing="8"
+      fill="url(#gold)"
+      stroke="#2A1705"
+      stroke-width="3"
+      paint-order="stroke fill">
+      LEAGUE OF
+    </text>
+    <text x="960" y="690"
+      text-anchor="middle"
+      font-family="Cinzel, Trajan Pro, Times New Roman, serif"
+      font-size="188"
+      font-weight="900"
+      letter-spacing="7"
+      fill="url(#gold)"
+      stroke="#2A1705"
+      stroke-width="3"
+      paint-order="stroke fill">
+      LEGENDS
+    </text>
+  </g>
+
+  <g opacity="0.44">
+    <path d="M0 105H1920" stroke="#00EAFF" stroke-opacity="0.34"/>
+    <path d="M0 974H1920" stroke="#FF1FBF" stroke-opacity="0.34"/>
+    <path d="M120 0V1080" stroke="#00EAFF" stroke-opacity="0.14"/>
+    <path d="M1800 0V1080" stroke="#FF1FBF" stroke-opacity="0.14"/>
+  </g>
+</svg>
