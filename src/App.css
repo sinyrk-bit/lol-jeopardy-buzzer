@@ -1,7 +1,7 @@
 :root {
   --bg: #01020a;
-  --panel: rgba(3, 8, 18, 0.78);
-  --panel-2: rgba(6, 12, 26, 0.9);
+  --panel: rgba(3, 8, 18, 0.5);
+  --panel-2: rgba(6, 12, 26, 0.48);
   --gold: #c89b3c;
   --gold-hot: #ffe59b;
   --cyan: #00eaff;
@@ -31,16 +31,18 @@ body,
 
 body {
   min-width: 320px;
-  background: url('./assets/cyberpunk-rift-background.png') center / cover no-repeat fixed;
+  background: var(--bg);
 }
 
 body::before {
-  background: transparent;
+  background: url('./assets/cyberpunk-rift-background.png') center / cover no-repeat fixed;
   content: '';
+  filter: blur(2px);
   inset: 0;
-  opacity: 0;
+  opacity: 1;
   pointer-events: none;
   position: fixed;
+  transform: scale(1.015);
   z-index: 0;
 }
 
@@ -133,7 +135,8 @@ p {
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  filter: none;
+  filter: blur(2px);
+  transform: scale(1.015);
 }
 
 .home-scene::before,
@@ -154,6 +157,7 @@ p {
 }
 
 .home-scene span {
+  display: none;
   position: absolute;
   width: 36rem;
   height: 2px;
@@ -194,17 +198,17 @@ p {
 .player-team-strip,
 .buzz-waiting,
 .game-over {
-  backdrop-filter: blur(10px) saturate(1.2);
+  backdrop-filter: blur(4px) saturate(1.12);
   border: 1px solid rgba(0, 234, 255, 0.28);
   background:
-    linear-gradient(135deg, rgba(0, 234, 255, 0.14), transparent 34%),
-    linear-gradient(225deg, rgba(255, 31, 191, 0.16), transparent 36%),
-    linear-gradient(180deg, var(--panel-2), rgba(1, 2, 10, 0.92));
+    linear-gradient(135deg, rgba(0, 234, 255, 0.1), transparent 34%),
+    linear-gradient(225deg, rgba(255, 31, 191, 0.1), transparent 36%),
+    linear-gradient(180deg, var(--panel-2), rgba(1, 2, 10, 0.42));
   box-shadow:
     inset 0 1px 0 rgba(255, 229, 155, 0.18),
-    inset 0 0 28px rgba(0, 234, 255, 0.06),
+    inset 0 0 28px rgba(0, 234, 255, 0.04),
     0 0 0 1px rgba(255, 31, 191, 0.1),
-    0 18px 56px rgba(0, 0, 0, 0.52),
+    0 18px 56px rgba(0, 0, 0, 0.34),
     0 0 34px rgba(0, 234, 255, 0.1),
     0 0 44px rgba(255, 31, 191, 0.12);
   clip-path: polygon(0 0, calc(100% - 13px) 0, 100% 13px, 100% 100%, 13px 100%, 0 calc(100% - 13px));
