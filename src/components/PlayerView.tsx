@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { GameBoard } from './GameBoard'
 import { QuestionMedia } from './QuestionMedia'
 import { Scoreboard } from './Scoreboard'
@@ -12,9 +13,11 @@ type PlayerViewProps = {
   error: string
   onBuzz: () => void
   onPickQuestion: (questionId: string) => void
+  onSubmitEstimate: (value: number, finalized?: boolean) => void
 }
 
-export function PlayerView({ gameState, playerId, status, error, onBuzz, onPickQuestion }: PlayerViewProps) {
+export function PlayerView({ gameState, playerId, status, error, onBuzz, onPickQuestion, onSubmitEstimate }: PlayerViewProps) {
+  const [estimateValue, setEstimateValue] = useState('')
   const currentQuestion = gameState.currentQuestion
   const remaining = questions.length - gameState.usedQuestions.length
   const displayValue = currentQuestion?.mode === 'estimate' ? 300 : currentQuestion && remaining <= 5 ? currentQuestion.value * 2 : currentQuestion?.value
@@ -25,6 +28,20 @@ export function PlayerView({ gameState, playerId, status, error, onBuzz, onPickQ
   const isPickingTeam = Boolean(assignedTeam && assignedTeam.id === activeTeamId)
   const requestedByTeam = gameState.teams.find((team) => team.id === gameState.requestedByTeamId)
   const queued = assignedTeam ? gameState.buzzerQueue.find((entry) => entry.teamId === assignedTeam.id) : null
+  const ownEstimate = assignedTeam
+    ? (gameState.estimateSubmissions ?? []).find((submission) => submission.teamId === assignedTeam.id)
+    : null
+  const isEstimateQuestion = currentQuestion?.mode === 'estimate'
+  const estimateTeamsWithPlayers = gameState.teams.filter((team) =>
+    (gameState.players ?? []).some((player) => player.teamId === team.id && player.connected),
+  )
+  const finalizedEstimateCount = estimateTeamsWithPlayers.filter((team) =>
+    (gameState.estimateSubmissions ?? []).some((submission) => submission.teamId === team.id && submission.finalized),
+  ).length
+
+  useEffect(() => {
+    setEstimateValue(ownEstimate ? String(ownEstimate.value) : '')
+  }, [currentQuestion?.id, ownEstimate])
 
   return (
     <main className="player-layout">
@@ -72,7 +89,40 @@ export function PlayerView({ gameState, playerId, status, error, onBuzz, onPickQ
               <QuestionMedia src={currentQuestion.answerImage} alt={`Bild zur Antwort ${currentQuestion.id}`} />
             </div>
           ) : null}
-          {assignedTeam ? (
+          {isEstimateQuestion ? (
+            <form
+              className="estimate-form"
+              onSubmit={(event) => {
+                event.preventDefault()
+                const numericEstimate = Number(estimateValue.replace(',', '.'))
+                if (Number.isFinite(numericEstimate)) {
+                  onSubmitEstimate(numericEstimate, true)
+                }
+              }}
+            >
+              <div>
+                <p className="eyebrow">Schätzung abgeben</p>
+                <strong>
+                  {ownEstimate?.finalized
+                    ? `${assignedTeam?.name ?? 'Dein Team'} hat final ${ownEstimate.value} abgegeben`
+                    : `${finalizedEstimateCount}/${estimateTeamsWithPlayers.length} Teams haben abgegeben`}
+                </strong>
+              </div>
+              <div className="estimate-input-row">
+                <input
+                  disabled={!assignedTeam || ownEstimate?.finalized}
+                  inputMode="decimal"
+                  onChange={(event) => setEstimateValue(event.target.value)}
+                  placeholder="Zahl"
+                  type="number"
+                  value={estimateValue}
+                />
+                <button className="primary-button" disabled={!assignedTeam || ownEstimate?.finalized || !estimateValue} type="submit">
+                  Final bestätigen
+                </button>
+              </div>
+            </form>
+          ) : assignedTeam ? (
             <button
               className={`player-buzz-button ${queued ? 'has-buzzed' : ''}`}
               disabled={gameState.buzzerLocked || Boolean(queued)}

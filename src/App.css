@@ -788,6 +788,48 @@ p {
   opacity: 0.48;
 }
 
+.estimate-panel {
+  display: grid;
+  gap: 8px;
+}
+
+.estimate-grid {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+
+.estimate-card {
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--team-color), transparent 86%), rgba(5, 12, 23, 0.7)),
+    rgba(3, 8, 18, 0.58);
+  border: 1px solid rgba(0, 234, 255, 0.22);
+  border-left: 4px solid var(--team-color);
+  border-radius: 4px;
+  display: grid;
+  gap: 3px;
+  min-height: 74px;
+  padding: 8px;
+}
+
+.estimate-card span,
+.estimate-card small {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.estimate-card strong {
+  color: var(--gold-hot);
+  font-size: clamp(1.3rem, 2.7vw, 2rem);
+}
+
+.estimate-card.is-finalized {
+  border-color: var(--lime);
+  box-shadow: inset 0 0 18px rgba(182, 255, 59, 0.12), 0 0 22px color-mix(in srgb, var(--team-color), transparent 62%);
+}
+
 .buzzer-queue {
   display: flex;
   flex-wrap: wrap;
@@ -949,6 +991,38 @@ p {
   margin-top: 12px;
   padding: 18px;
   text-align: center;
+}
+
+.estimate-form {
+  background:
+    linear-gradient(90deg, rgba(0, 234, 255, 0.1), rgba(255, 31, 191, 0.08)),
+    rgba(3, 8, 18, 0.62);
+  border: 1px solid rgba(0, 234, 255, 0.28);
+  border-radius: 4px;
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 12px;
+}
+
+.estimate-form strong {
+  color: var(--gold-hot);
+}
+
+.estimate-input-row {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.estimate-input-row input {
+  background: rgba(0, 0, 0, 0.38);
+  border: 1px solid rgba(0, 234, 255, 0.28);
+  border-radius: 3px;
+  color: var(--text);
+  min-height: 44px;
+  min-width: 0;
+  padding: 8px 10px;
 }
 
 .overlay-backdrop {
@@ -1256,6 +1330,10 @@ p {
   }
 
   .question-start-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .estimate-input-row {
     grid-template-columns: 1fr;
   }
 

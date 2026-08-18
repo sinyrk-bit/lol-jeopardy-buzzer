@@ -116,6 +116,7 @@ export function useRoom({ initialRoomId, getSnapshot, onPlayerMessage, onHostMes
         } else if (
           message.type === 'buzz' ||
           message.type === 'pick-question' ||
+          message.type === 'submit-estimate' ||
           message.type === 'player-joined' ||
           message.type === 'player-left'
         ) {
@@ -181,6 +182,13 @@ export function useRoom({ initialRoomId, getSnapshot, onPlayerMessage, onHostMes
     [playerId, send],
   )
 
+  const sendEstimate = useCallback(
+    (value: number, finalized = true) => {
+      send({ type: 'submit-estimate', playerId, value, finalized })
+    },
+    [playerId, send],
+  )
+
   useEffect(() => closeRoom, [closeRoom])
 
   return {
@@ -197,5 +205,6 @@ export function useRoom({ initialRoomId, getSnapshot, onPlayerMessage, onHostMes
     broadcastSnapshot,
     sendBuzz,
     sendQuestionPick,
+    sendEstimate,
   }
 }

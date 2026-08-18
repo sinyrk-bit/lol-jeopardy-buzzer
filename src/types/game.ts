@@ -33,6 +33,15 @@ export type BuzzerEntry = {
   timestamp: number
 }
 
+export type EstimateSubmission = {
+  teamId: string
+  playerId: string
+  playerName: string
+  value: number
+  finalized: boolean
+  timestamp: number
+}
+
 export type GameState = {
   teams: Team[]
   usedQuestions: string[]
@@ -46,6 +55,7 @@ export type GameState = {
   activeTeamId: string | null
   requestedQuestionId: string | null
   requestedByTeamId: string | null
+  estimateSubmissions: EstimateSubmission[]
 }
 
 export type Screen = 'home' | 'setup' | 'game' | 'gameOver'
@@ -87,4 +97,10 @@ export type PlayerMessage =
       type: 'pick-question'
       playerId: string
       questionId: string
+    }
+  | {
+      type: 'submit-estimate'
+      playerId: string
+      value: number
+      finalized: boolean
     }

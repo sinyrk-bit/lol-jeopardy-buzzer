@@ -1,7 +1,7 @@
 import { BuzzerPanel } from './BuzzerPanel'
 import { QuestionMedia } from './QuestionMedia'
 import type { CSSProperties } from 'react'
-import type { BuzzerEntry, Question, Team } from '../types/game'
+import type { BuzzerEntry, EstimateSubmission, Question, Team } from '../types/game'
 
 type QuestionCardProps = {
   question: Question
@@ -11,6 +11,7 @@ type QuestionCardProps = {
   wrongAnswerCostsPoints: boolean
   buzzerQueue: BuzzerEntry[]
   buzzerLocked: boolean
+  estimateSubmissions: EstimateSubmission[]
   onShowAnswer: () => void
   onAward: (teamId: string, correct: boolean) => void
   onNoAnswer: () => void
@@ -28,6 +29,7 @@ export function QuestionCard({
   wrongAnswerCostsPoints,
   buzzerQueue,
   buzzerLocked,
+  estimateSubmissions,
   onShowAnswer,
   onAward,
   onNoAnswer,
@@ -37,6 +39,9 @@ export function QuestionCard({
   onToggleBuzzerLock,
 }: QuestionCardProps) {
   const isEstimateQuestion = question.mode === 'estimate'
+  const finalizedEstimateCount = teams.filter((team) =>
+    estimateSubmissions.some((submission) => submission.teamId === team.id && submission.finalized),
+  ).length
 
   return (
     <section className="question-stage" aria-label="Aktuelle Frage">
@@ -70,14 +75,44 @@ export function QuestionCard({
         ) : null}
       </div>
 
-      <BuzzerPanel
-        teams={teams}
-        queue={buzzerQueue}
-        locked={buzzerLocked}
-        onBuzz={onBuzz}
-        onReset={onResetBuzzers}
-        onToggleLock={onToggleBuzzerLock}
-      />
+      {isEstimateQuestion ? (
+        <section className="buzzer-panel estimate-panel" aria-label="Schätzungen">
+          <div className="panel-heading">
+            <div>
+              <p className="eyebrow">Team-Schätzungen</p>
+              <h2>
+                {finalizedEstimateCount}/{teams.length} abgegeben
+              </h2>
+            </div>
+          </div>
+          <div className="estimate-grid">
+            {teams.map((team) => {
+              const submission = estimateSubmissions.find((entry) => entry.teamId === team.id)
+
+              return (
+                <div
+                  className={`estimate-card ${submission?.finalized ? 'is-finalized' : ''}`}
+                  key={team.id}
+                  style={{ '--team-color': team.color } as CSSProperties}
+                >
+                  <span>{team.name}</span>
+                  <strong>{submission ? submission.value : 'Wartet'}</strong>
+                  <small>{submission ? `von ${submission.playerName}` : 'Noch keine finale Schätzung'}</small>
+                </div>
+              )
+            })}
+          </div>
+        </section>
+      ) : (
+        <BuzzerPanel
+          teams={teams}
+          queue={buzzerQueue}
+          locked={buzzerLocked}
+          onBuzz={onBuzz}
+          onReset={onResetBuzzers}
+          onToggleLock={onToggleBuzzerLock}
+        />
+      )}
 
       {showAnswer ? (
         <section className="host-panel" aria-label="Host-Steuerung">

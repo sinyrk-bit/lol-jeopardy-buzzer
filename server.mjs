@@ -128,6 +128,15 @@ wss.on('connection', (socket) => {
     if (message.type === 'pick-question' && !isHost && room.host) {
       send(room.host, { type: 'pick-question', playerId: currentPlayerId || message.playerId, questionId: message.questionId })
     }
+
+    if (message.type === 'submit-estimate' && !isHost && room.host) {
+      send(room.host, {
+        type: 'submit-estimate',
+        playerId: currentPlayerId || message.playerId,
+        value: Number(message.value),
+        finalized: Boolean(message.finalized),
+      })
+    }
   })
 
   socket.on('close', () => {

@@ -23,6 +23,8 @@ export function QuestionStartOverlay({
   onStartWithoutBuzzer,
   onCancel,
 }: QuestionStartOverlayProps) {
+  const isEstimateQuestion = question.mode === 'estimate'
+
   return (
     <div className="overlay-backdrop" role="presentation">
       <section className="question-start-overlay" aria-label="Frage starten">
@@ -30,11 +32,15 @@ export function QuestionStartOverlay({
 
         <div className="question-start-panel">
           <div>
-            <p className="eyebrow">Host entscheidet vor dem Aufdecken</p>
+            <p className="eyebrow">{isEstimateQuestion ? 'Schätzrunde vorbereiten' : 'Host entscheidet vor dem Aufdecken'}</p>
             <h2>
               {question.category} - {displayValue}
             </h2>
-            <p>{teams.find((team) => team.id === activeTeamId)?.name ?? 'Das ausgewählte Team'} hat diese Frage ausgesucht.</p>
+            <p>
+              {isEstimateQuestion
+                ? 'Alle Teams geben eine finale Zahl ab. Danach deckt der Host die Antwort auf.'
+                : `${teams.find((team) => team.id === activeTeamId)?.name ?? 'Das ausgewählte Team'} hat diese Frage ausgesucht.`}
+            </p>
           </div>
 
           <div className="question-start-preview">
@@ -43,12 +49,20 @@ export function QuestionStartOverlay({
           </div>
 
           <div className="question-start-actions">
-            <button className="primary-button" type="button" onClick={onStartWithBuzzer}>
-              Mit Buzzer starten
-            </button>
-            <button className="secondary-button" type="button" onClick={onStartWithoutBuzzer}>
-              Ohne Buzzer zeigen
-            </button>
+            {isEstimateQuestion ? (
+              <button className="primary-button" type="button" onClick={onStartWithoutBuzzer}>
+                Schätzrunde starten
+              </button>
+            ) : (
+              <>
+                <button className="primary-button" type="button" onClick={onStartWithBuzzer}>
+                  Mit Buzzer starten
+                </button>
+                <button className="secondary-button" type="button" onClick={onStartWithoutBuzzer}>
+                  Ohne Buzzer zeigen
+                </button>
+              </>
+            )}
             <button className="secondary-button" type="button" onClick={onCancel}>
               Abbrechen
             </button>

@@ -28,6 +28,7 @@ const emptyGameState: GameState = {
   activeTeamId: null,
   requestedQuestionId: null,
   requestedByTeamId: null,
+  estimateSubmissions: [],
 }
 
 function getNextTeamId(teams: Team[], currentTeamId: string | null) {
@@ -92,6 +93,7 @@ function App() {
     broadcastSnapshot,
     sendBuzz,
     sendQuestionPick,
+    sendEstimate,
   } = useRoom({
     initialRoomId: joinRoomId,
     getSnapshot: () => ({
@@ -123,6 +125,42 @@ function App() {
             requestedQuestionId: pickedQuestion.id,
             requestedByTeamId: player.teamId,
           }))
+        }
+      }
+
+      if (message.type === 'submit-estimate') {
+        const player = players.find((candidate) => candidate.id === message.playerId)
+        const teamId = player?.teamId
+        const estimateValue = Number(message.value)
+
+        if (teamId && gameState.currentQuestion?.mode === 'estimate' && Number.isFinite(estimateValue)) {
+          setGameState((current) => {
+            if (current.currentQuestion?.mode !== 'estimate') {
+              return current
+            }
+
+            const currentSubmissions = current.estimateSubmissions ?? []
+            const existingSubmission = currentSubmissions.find((submission) => submission.teamId === teamId)
+            if (existingSubmission?.finalized) {
+              return current
+            }
+
+            const nextSubmission = {
+              teamId,
+              playerId: player.id,
+              playerName: player.name,
+              value: estimateValue,
+              finalized: message.finalized,
+              timestamp: Date.now(),
+            }
+
+            return {
+              ...current,
+              estimateSubmissions: existingSubmission
+                ? currentSubmissions.map((submission) => (submission.teamId === teamId ? nextSubmission : submission))
+                : [...currentSubmissions, nextSubmission],
+            }
+          })
         }
       }
 
@@ -222,6 +260,7 @@ function App() {
       showAnswer: false,
       buzzerQueue: [],
       buzzerLocked: !useBuzzer,
+      estimateSubmissions: [],
       requestedQuestionId: null,
       requestedByTeamId: null,
     }))
@@ -258,6 +297,7 @@ function App() {
         gameFinished,
         buzzerQueue: [],
         buzzerLocked: true,
+        estimateSubmissions: [],
         requestedQuestionId: null,
         requestedByTeamId: null,
       }
@@ -293,6 +333,7 @@ function App() {
         error={error}
         onBuzz={sendBuzz}
         onPickQuestion={sendQuestionPick}
+        onSubmitEstimate={sendEstimate}
       />
     )
   }
@@ -349,6 +390,7 @@ function App() {
             wrongAnswerCostsPoints={gameState.wrongAnswerCostsPoints}
             buzzerQueue={gameState.buzzerQueue}
             buzzerLocked={gameState.buzzerLocked}
+            estimateSubmissions={gameState.estimateSubmissions ?? []}
             onShowAnswer={() => setGameState((current) => ({ ...current, showAnswer: true, buzzerLocked: true }))}
             onAward={(teamId, correct) => finishQuestion(teamId, correct)}
             onNoAnswer={() => finishQuestion()}
@@ -357,6 +399,7 @@ function App() {
                 ...current,
                 currentQuestion: null,
                 buzzerLocked: true,
+                estimateSubmissions: [],
                 requestedQuestionId: null,
                 requestedByTeamId: null,
               }))

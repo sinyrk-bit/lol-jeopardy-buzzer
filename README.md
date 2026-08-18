@@ -61,7 +61,7 @@ Die Team-Leiste bleibt immer in der Setup-Reihenfolge. Über `Auswahlrecht` legt
 
 ## Kluft-Kalkulation
 
-Die Kategorie `Kluft-Kalkulation` ersetzt die alte Item-Kategorie. Alle fünf Fragen sind Schätzfragen und geben immer 300 Punkte. Jedes Team schätzt für sich; nach dem Aufdecken klickt der Host bei dem Team auf `Am nächsten`, das am besten geschätzt hat.
+Die Kategorie `Kluft-Kalkulation` ersetzt die alte Item-Kategorie. Alle fünf Fragen sind Schätzfragen und geben immer 300 Punkte. Jedes Team trägt in der Spieleransicht eine Zahl ein und bestätigt sie final. Der Host sieht alle abgegebenen Schätzungen im Frage-Overlay; nach dem Aufdecken klickt er bei dem Team auf `Am nächsten`, das am besten geschätzt hat.
 
 ## Bilder In Fragen
 
