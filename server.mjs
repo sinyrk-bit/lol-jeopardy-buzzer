@@ -124,6 +124,10 @@ wss.on('connection', (socket) => {
     if (message.type === 'buzz' && !isHost && room.host) {
       send(room.host, { type: 'buzz', playerId: currentPlayerId || message.playerId })
     }
+
+    if (message.type === 'pick-question' && !isHost && room.host) {
+      send(room.host, { type: 'pick-question', playerId: currentPlayerId || message.playerId, questionId: message.questionId })
+    }
   })
 
   socket.on('close', () => {

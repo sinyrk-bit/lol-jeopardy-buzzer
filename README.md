@@ -20,7 +20,8 @@ Eine vollständige React- und TypeScript-Jeopardy-App, inspiriert von einem dunk
 - Host-Steuerung für Antworten, Fragenabschluss, Punktevergabe und Spielerwechsel
 - feste Team-Anzeige in Setup-Reihenfolge, damit Team 1 bis 4 nicht nach Punkten springen
 - Host wählt, welches Team die nächste Frage aussuchen darf
-- Cyberpunk-Oberfläche mit generiertem League-Schriftzug und offiziellem Riot-Data-Dragon-Splash-Art
+- nur das aktive Team kann die nächste Punkte-Kachel auswählen; der Host bestätigt die markierte Auswahl
+- Cyberpunk-Oberfläche mit generiertem League-Schriftzug und eigenem 16:9-Hintergrundbild
 - Spielstand bleibt über `localStorage` gespeichert
 - Game-Over-Ansicht mit Rangliste
 
@@ -54,7 +55,7 @@ Starte als Host ein Spiel, klicke auf `Link erstellen` und teile die erzeugte UR
 
 Der Host sieht die Antwort sofort im privaten Host-Panel. Spieler sehen sie erst, wenn der Host auf `Antwort für Spieler aufdecken` klickt.
 
-Die Team-Leiste bleibt immer in der Setup-Reihenfolge. Über `Auswahlrecht` legt der Host fest, welches Team die nächste Frage aussuchen darf; die Frage selbst wird weiterhin nur vom Host angeklickt und freigegeben.
+Die Team-Leiste bleibt immer in der Setup-Reihenfolge. Über `Auswahlrecht` legt der Host fest, welches Team die nächste Frage aussuchen darf. Nur Spieler aus diesem Team können auf dem Board eine Punkte-Kachel markieren; der Host sieht diese Markierung und klickt sie an, um die Frage mit oder ohne Buzzer freizugeben.
 
 ## Bilder In Fragen
 
@@ -74,6 +75,4 @@ Lege Bilder in `public/question-images/` ab und referenziere sie danach in `src/
 
 ## Quelle Der Visual Assets
 
-Der Cyberpunk-Hintergrund nutzt das generierte 16:9-SVG unter `src/assets/league-cyberpunk-title.svg` als Haupt-Hologramm und das offizielle Riot-Data-Dragon-Champion-Splash-Art für `PROJECT: Zed` als atmosphärische Ebene:
-
-`https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Zed_3.jpg`
+Der Cyberpunk-Hintergrund nutzt das generierte 16:9-SVG unter `src/assets/league-cyberpunk-title.svg` als Hologramm-Ebene und das Bild `src/assets/cyberpunk-rift-background.png` als Vollbild-Hintergrund.

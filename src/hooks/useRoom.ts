@@ -113,7 +113,12 @@ export function useRoom({ initialRoomId, getSnapshot, onPlayerMessage, onHostMes
         } else if (message.type === 'error') {
           setError(message.message)
           setStatus('error')
-        } else if (message.type === 'buzz' || message.type === 'player-joined' || message.type === 'player-left') {
+        } else if (
+          message.type === 'buzz' ||
+          message.type === 'pick-question' ||
+          message.type === 'player-joined' ||
+          message.type === 'player-left'
+        ) {
           playerMessageRef.current?.(message)
         } else {
           hostMessageRef.current?.(message)
@@ -169,6 +174,13 @@ export function useRoom({ initialRoomId, getSnapshot, onPlayerMessage, onHostMes
     send({ type: 'buzz', playerId })
   }, [playerId, send])
 
+  const sendQuestionPick = useCallback(
+    (questionId: string) => {
+      send({ type: 'pick-question', playerId, questionId })
+    },
+    [playerId, send],
+  )
+
   useEffect(() => closeRoom, [closeRoom])
 
   return {
@@ -184,5 +196,6 @@ export function useRoom({ initialRoomId, getSnapshot, onPlayerMessage, onHostMes
     closeRoom,
     broadcastSnapshot,
     sendBuzz,
+    sendQuestionPick,
   }
 }

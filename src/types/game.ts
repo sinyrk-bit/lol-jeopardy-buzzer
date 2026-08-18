@@ -43,6 +43,8 @@ export type GameState = {
   buzzerLocked: boolean
   players: Player[]
   activeTeamId: string | null
+  requestedQuestionId: string | null
+  requestedByTeamId: string | null
 }
 
 export type Screen = 'home' | 'setup' | 'game' | 'gameOver'
@@ -79,4 +81,9 @@ export type PlayerMessage =
   | {
       type: 'buzz'
       playerId: string
+    }
+  | {
+      type: 'pick-question'
+      playerId: string
+      questionId: string
     }

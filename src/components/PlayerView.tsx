@@ -11,14 +11,19 @@ type PlayerViewProps = {
   status: NetworkStatus
   error: string
   onBuzz: () => void
+  onPickQuestion: (questionId: string) => void
 }
 
-export function PlayerView({ gameState, playerId, status, error, onBuzz }: PlayerViewProps) {
+export function PlayerView({ gameState, playerId, status, error, onBuzz, onPickQuestion }: PlayerViewProps) {
   const currentQuestion = gameState.currentQuestion
   const remaining = questions.length - gameState.usedQuestions.length
   const displayValue = currentQuestion && remaining <= 5 ? currentQuestion.value * 2 : currentQuestion?.value
   const currentPlayer = (gameState.players ?? []).find((player) => player.id === playerId)
   const assignedTeam = gameState.teams.find((team) => team.id === currentPlayer?.teamId)
+  const activeTeamId = gameState.activeTeamId ?? gameState.teams[0]?.id ?? null
+  const activeTeam = gameState.teams.find((team) => team.id === activeTeamId)
+  const isPickingTeam = Boolean(assignedTeam && assignedTeam.id === activeTeamId)
+  const requestedByTeam = gameState.teams.find((team) => team.id === gameState.requestedByTeamId)
   const queued = assignedTeam ? gameState.buzzerQueue.find((entry) => entry.teamId === assignedTeam.id) : null
 
   return (
@@ -35,11 +40,22 @@ export function PlayerView({ gameState, playerId, status, error, onBuzz }: Playe
       <Scoreboard
         teams={gameState.teams}
         players={gameState.players ?? []}
-        activeTeamId={gameState.activeTeamId ?? gameState.teams[0]?.id ?? null}
+        activeTeamId={activeTeamId}
       />
       <section className="player-team-strip">
-        <p className="eyebrow">Dein Team</p>
-        <strong>{assignedTeam ? assignedTeam.name : 'Warte auf Zuweisung durch den Host'}</strong>
+        <div>
+          <p className="eyebrow">Dein Team</p>
+          <strong>{assignedTeam ? assignedTeam.name : 'Warte auf Zuweisung durch den Host'}</strong>
+        </div>
+        {!currentQuestion ? (
+          <span className={`picker-pill ${isPickingTeam ? 'is-active' : ''}`}>
+            {gameState.requestedQuestionId
+              ? `${requestedByTeam?.name ?? 'Team'} hat gewählt`
+              : isPickingTeam
+                ? 'Ihr sucht aus'
+                : `${activeTeam?.name ?? 'Der Host'} sucht aus`}
+          </span>
+        ) : null}
       </section>
 
       {currentQuestion ? (
@@ -79,7 +95,10 @@ export function PlayerView({ gameState, playerId, status, error, onBuzz }: Playe
           questions={questions}
           usedQuestions={gameState.usedQuestions}
           getQuestionValue={(question) => (questions.length - gameState.usedQuestions.length <= 5 ? question.value * 2 : question.value)}
-          onSelectQuestion={(_: Question) => undefined}
+          selectedQuestionId={gameState.requestedQuestionId ?? null}
+          selectionLabel={gameState.requestedQuestionId ? 'Gewählt' : null}
+          canSelectQuestion={isPickingTeam && !gameState.requestedQuestionId}
+          onSelectQuestion={(question: Question) => onPickQuestion(question.id)}
         />
       )}
     </main>

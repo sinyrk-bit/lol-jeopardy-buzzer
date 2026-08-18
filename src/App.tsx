@@ -26,6 +26,8 @@ const emptyGameState: GameState = {
   buzzerLocked: true,
   players: [],
   activeTeamId: null,
+  requestedQuestionId: null,
+  requestedByTeamId: null,
 }
 
 function App() {
@@ -74,6 +76,7 @@ function App() {
     joinRoom,
     broadcastSnapshot,
     sendBuzz,
+    sendQuestionPick,
   } = useRoom({
     initialRoomId: joinRoomId,
     getSnapshot: () => ({
@@ -86,6 +89,25 @@ function App() {
         const player = players.find((candidate) => candidate.id === message.playerId)
         if (player?.teamId) {
           buzz(player.teamId)
+        }
+      }
+
+      if (message.type === 'pick-question') {
+        const player = players.find((candidate) => candidate.id === message.playerId)
+        const pickedQuestion = questions.find((question) => question.id === message.questionId)
+        const canPick =
+          player?.teamId &&
+          player.teamId === activeTeamId &&
+          pickedQuestion &&
+          !gameState.currentQuestion &&
+          !gameState.usedQuestions.includes(pickedQuestion.id)
+
+        if (canPick) {
+          setGameState((current) => ({
+            ...current,
+            requestedQuestionId: pickedQuestion.id,
+            requestedByTeamId: player.teamId,
+          }))
         }
       }
 
@@ -167,6 +189,10 @@ function App() {
   }
 
   const openQuestion = (question: Question) => {
+    if (gameState.requestedQuestionId && gameState.requestedQuestionId !== question.id) {
+      return
+    }
+
     setPendingQuestion(question)
   }
 
@@ -181,6 +207,8 @@ function App() {
       showAnswer: false,
       buzzerQueue: [],
       buzzerLocked: !useBuzzer,
+      requestedQuestionId: null,
+      requestedByTeamId: null,
     }))
     setPendingQuestion(null)
   }
@@ -214,6 +242,8 @@ function App() {
         gameFinished,
         buzzerQueue: [],
         buzzerLocked: true,
+        requestedQuestionId: null,
+        requestedByTeamId: null,
       }
     })
   }
@@ -246,6 +276,7 @@ function App() {
         status={status}
         error={error}
         onBuzz={sendBuzz}
+        onPickQuestion={sendQuestionPick}
       />
     )
   }
@@ -282,7 +313,15 @@ function App() {
         <TurnControl
           teams={gameState.teams}
           activeTeamId={activeTeamId}
-          onSetActiveTeam={(teamId) => setGameState((current) => ({ ...current, activeTeamId: teamId }))}
+          requestedQuestionId={gameState.requestedQuestionId ?? null}
+          onSetActiveTeam={(teamId) =>
+            setGameState((current) => ({
+              ...current,
+              activeTeamId: teamId,
+              requestedQuestionId: null,
+              requestedByTeamId: null,
+            }))
+          }
         />
 
         {gameState.currentQuestion ? (
@@ -297,7 +336,15 @@ function App() {
             onShowAnswer={() => setGameState((current) => ({ ...current, showAnswer: true, buzzerLocked: true }))}
             onAward={(teamId, correct) => finishQuestion(teamId, correct)}
             onNoAnswer={() => finishQuestion()}
-            onBackToBoard={() => setGameState((current) => ({ ...current, currentQuestion: null, buzzerLocked: true }))}
+            onBackToBoard={() =>
+              setGameState((current) => ({
+                ...current,
+                currentQuestion: null,
+                buzzerLocked: true,
+                requestedQuestionId: null,
+                requestedByTeamId: null,
+              }))
+            }
             onBuzz={buzz}
             onResetBuzzers={() => setGameState((current) => ({ ...current, buzzerQueue: [], buzzerLocked: true }))}
             onToggleBuzzerLock={() => setGameState((current) => ({ ...current, buzzerLocked: !current.buzzerLocked }))}
@@ -307,6 +354,13 @@ function App() {
             questions={questions}
             usedQuestions={gameState.usedQuestions}
             getQuestionValue={getQuestionValue}
+            selectedQuestionId={gameState.requestedQuestionId ?? null}
+            selectionLabel={
+              gameState.requestedQuestionId
+                ? `${gameState.teams.find((team) => team.id === gameState.requestedByTeamId)?.name ?? 'Team'} hat gewählt`
+                : null
+            }
+            lockedToSelection={Boolean(gameState.requestedQuestionId)}
             onSelectQuestion={openQuestion}
           />
         )}
