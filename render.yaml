@@ -1,10 +1,6 @@
 services:
   - type: web
     name: lol-jeopardy-buzzer
-    runtime: static
+    runtime: node
     buildCommand: npm install && npm run build
-    staticPublishPath: dist
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
+    startCommand: npm start

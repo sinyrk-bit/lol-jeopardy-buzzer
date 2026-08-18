@@ -6,6 +6,8 @@ export type Question = {
   value: number
   question: string
   answer: string
+  questionImage?: string
+  answerImage?: string
   difficulty?: Difficulty
   explanation?: string
 }

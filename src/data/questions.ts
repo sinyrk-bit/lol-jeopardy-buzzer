@@ -152,6 +152,7 @@ export const questions: Question[] = [
     difficulty: 'easy',
     question: 'Wie viele Lanes hat Summoner\'s Rift?',
     answer: 'Drei',
+    questionImage: 'question-images/sample-rift.svg',
     explanation: 'Top, Mid und Bot bilden die drei Haupt-Lanes.',
   },
   {

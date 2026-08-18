@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Peer, type DataConnection } from 'peerjs'
 import type { HostMessage, NetworkStatus, PlayerMessage, PublicGameSnapshot } from '../types/game'
 
 type UseRoomOptions = {
@@ -15,15 +14,28 @@ function makeRoomId() {
   return `${roomPrefix}${Math.random().toString(36).slice(2, 8)}`
 }
 
+function getRoomServerUrl() {
+  const configured = import.meta.env.VITE_ROOM_SERVER_URL as string | undefined
+  if (configured) {
+    return configured
+  }
+
+  if (window.location.hostname.endsWith('github.io')) {
+    return 'wss://lol-jeopardy-buzzer.onrender.com/rooms'
+  }
+
+  const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
+  return `${protocol}//${window.location.host}/rooms`
+}
+
 export function useRoom({ initialRoomId, getSnapshot, onPlayerMessage, onHostMessage }: UseRoomOptions = {}) {
   const [roomId, setRoomId] = useState(initialRoomId ?? '')
   const [status, setStatus] = useState<NetworkStatus>('idle')
   const [error, setError] = useState('')
   const [guestCount, setGuestCount] = useState(0)
   const [lastSnapshot, setLastSnapshot] = useState<PublicGameSnapshot | null>(null)
-  const peerRef = useRef<Peer | null>(null)
-  const hostConnectionRef = useRef<DataConnection | null>(null)
-  const guestConnectionsRef = useRef<DataConnection[]>([])
+  const socketRef = useRef<WebSocket | null>(null)
+  const isHostRef = useRef(false)
   const playerMessageRef = useRef(onPlayerMessage)
   const hostMessageRef = useRef(onHostMessage)
   const snapshotRef = useRef(getSnapshot)
@@ -42,107 +54,106 @@ export function useRoom({ initialRoomId, getSnapshot, onPlayerMessage, onHostMes
     return url.toString()
   }, [roomId])
 
+  const send = useCallback((payload: unknown) => {
+    if (socketRef.current?.readyState === WebSocket.OPEN) {
+      socketRef.current.send(JSON.stringify(payload))
+    }
+  }, [])
+
   const closeRoom = useCallback(() => {
-    guestConnectionsRef.current.forEach((connection) => connection.close())
-    hostConnectionRef.current?.close()
-    peerRef.current?.destroy()
-    guestConnectionsRef.current = []
-    hostConnectionRef.current = null
-    peerRef.current = null
+    socketRef.current?.close()
+    socketRef.current = null
+    isHostRef.current = false
     setGuestCount(0)
     setStatus('idle')
   }, [])
 
-  const hostRoom = useCallback(() => {
-    closeRoom()
-    const nextRoomId = makeRoomId()
-    const peer = new Peer(nextRoomId)
-    peerRef.current = peer
-    setRoomId(nextRoomId)
-    setError('')
-    setStatus('connecting')
+  const connectSocket = useCallback(
+    (onOpen: (socket: WebSocket) => void) => {
+      closeRoom()
+      setError('')
+      setStatus('connecting')
+      const socket = new WebSocket(getRoomServerUrl())
+      socketRef.current = socket
 
-    peer.on('open', () => {
-      setStatus('connected')
-    })
-
-    peer.on('connection', (connection) => {
-      guestConnectionsRef.current = [...guestConnectionsRef.current, connection]
-      setGuestCount(guestConnectionsRef.current.length)
-
-      connection.on('data', (data) => {
-        const message = data as PlayerMessage
-        playerMessageRef.current?.(message)
-        if (message.type === 'join') {
-          const snapshot = snapshotRef.current?.()
-          if (snapshot && connection.open) {
-            connection.send({ type: 'snapshot', payload: snapshot } satisfies HostMessage)
-          }
-        }
-      })
-
-      connection.on('close', () => {
-        guestConnectionsRef.current = guestConnectionsRef.current.filter((guest) => guest !== connection)
-        setGuestCount(guestConnectionsRef.current.length)
-      })
-    })
-
-    peer.on('error', (peerError) => {
-      setStatus('error')
-      setError(peerError.message)
-    })
-  }, [closeRoom])
-
-  const joinRoom = useCallback((targetRoomId: string, playerName: string) => {
-    closeRoom()
-    const peer = new Peer()
-    peerRef.current = peer
-    setRoomId(targetRoomId)
-    setError('')
-    setStatus('connecting')
-
-    peer.on('open', () => {
-      const connection = peer.connect(targetRoomId, { reliable: true })
-      hostConnectionRef.current = connection
-
-      connection.on('open', () => {
+      socket.addEventListener('open', () => {
         setStatus('connected')
-        connection.send({ type: 'join', playerName } satisfies PlayerMessage)
+        onOpen(socket)
       })
 
-      connection.on('data', (data) => {
-        const message = data as HostMessage
-        hostMessageRef.current?.(message)
+      socket.addEventListener('message', (event) => {
+        const message = JSON.parse(String(event.data)) as
+          | HostMessage
+          | PlayerMessage
+          | { type: 'guest-count'; count: number }
+          | { type: 'error'; message: string }
+
         if (message.type === 'snapshot') {
           setLastSnapshot(message.payload)
+          hostMessageRef.current?.(message)
+        } else if (message.type === 'guest-count') {
+          setGuestCount(message.count)
+        } else if (message.type === 'error') {
+          setError(message.message)
+          setStatus('error')
+        } else if (message.type === 'buzz' || message.type === 'join') {
+          playerMessageRef.current?.(message)
+        } else {
+          hostMessageRef.current?.(message)
         }
       })
 
-      connection.on('close', () => {
+      socket.addEventListener('close', () => {
         setStatus('idle')
       })
-    })
 
-    peer.on('error', (peerError) => {
-      setStatus('error')
-      setError(peerError.message)
-    })
-  }, [closeRoom])
+      socket.addEventListener('error', () => {
+        setStatus('error')
+        setError('Room-Server nicht erreichbar.')
+      })
+    },
+    [closeRoom],
+  )
 
-  const broadcastSnapshot = useCallback((snapshot: PublicGameSnapshot) => {
-    guestConnectionsRef.current.forEach((connection) => {
-      if (connection.open) {
-        connection.send({ type: 'snapshot', payload: snapshot } satisfies HostMessage)
+  const hostRoom = useCallback(() => {
+    const nextRoomId = makeRoomId()
+    setRoomId(nextRoomId)
+    connectSocket((socket) => {
+      isHostRef.current = true
+      socket.send(JSON.stringify({ type: 'host-room', roomId: nextRoomId }))
+      const snapshot = snapshotRef.current?.()
+      if (snapshot) {
+        socket.send(JSON.stringify({ type: 'snapshot', payload: snapshot }))
       }
     })
-  }, [])
+  }, [connectSocket])
 
-  const sendBuzz = useCallback((teamId: string) => {
-    const connection = hostConnectionRef.current
-    if (connection?.open) {
-      connection.send({ type: 'buzz', teamId } satisfies PlayerMessage)
-    }
-  }, [])
+  const joinRoom = useCallback(
+    (targetRoomId: string, playerName: string) => {
+      setRoomId(targetRoomId)
+      isHostRef.current = false
+      connectSocket((socket) => {
+        socket.send(JSON.stringify({ type: 'join-room', roomId: targetRoomId, playerName }))
+      })
+    },
+    [connectSocket],
+  )
+
+  const broadcastSnapshot = useCallback(
+    (snapshot: PublicGameSnapshot) => {
+      if (isHostRef.current) {
+        send({ type: 'snapshot', payload: snapshot })
+      }
+    },
+    [send],
+  )
+
+  const sendBuzz = useCallback(
+    (teamId: string) => {
+      send({ type: 'buzz', teamId })
+    },
+    [send],
+  )
 
   useEffect(() => closeRoom, [closeRoom])
 

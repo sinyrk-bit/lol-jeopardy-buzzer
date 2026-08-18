@@ -11,9 +11,10 @@ A complete React + TypeScript Jeopardy game inspired by a dark fantasy esports s
 - animated Jeopardy board hover states
 - question and answer flow
 - host-controlled scoring
-- configurable penalty for wrong answers
+- configurable penalty for wrong answers, now scored as half the question value
+- final 5 remaining questions become bonus questions worth double points
 - team buzzer system with queue, lock, and reset
-- invite link for friends through browser-to-browser PeerJS rooms
+- invite link for friends through the built-in Render WebSocket room server
 - host-only controls for revealing answers, ending questions, and assigning points
 - score persistence through `localStorage`
 - game over screen with ranking
@@ -35,11 +36,27 @@ The production build is written to `dist/`.
 
 ## Render
 
-This repo includes `render.yaml` for a Render Static Site.
+This repo includes `render.yaml` for a Render Web Service that serves the app and the live room server.
 
 - Build command: `npm install && npm run build`
-- Publish directory: `dist`
+- Start command: `npm start`
 
 ## Multiplayer
 
 Start a host game, click `Link erstellen`, and share the generated URL. Friends join in player mode and can buzz for their team while the host keeps control of questions, answers, and scoring.
+
+## Images In Questions
+
+Add images to `public/question-images/`, then reference them in `src/data/questions.ts`.
+
+```ts
+{
+  id: 'champions-100',
+  category: 'Champions',
+  value: 100,
+  question: 'Welcher Champion ist das?',
+  answer: 'Lee Sin',
+  questionImage: 'question-images/lee-sin-question.png',
+  answerImage: 'question-images/lee-sin-answer.png',
+}
+```

@@ -1,9 +1,11 @@
 import { BuzzerPanel } from './BuzzerPanel'
+import { QuestionMedia } from './QuestionMedia'
 import type { CSSProperties } from 'react'
 import type { BuzzerEntry, Question, Team } from '../types/game'
 
 type QuestionCardProps = {
   question: Question
+  displayValue: number
   teams: Team[]
   showAnswer: boolean
   wrongAnswerCostsPoints: boolean
@@ -20,6 +22,7 @@ type QuestionCardProps = {
 
 export function QuestionCard({
   question,
+  displayValue,
   teams,
   showAnswer,
   wrongAnswerCostsPoints,
@@ -37,9 +40,10 @@ export function QuestionCard({
     <section className="question-stage" aria-label="Aktuelle Frage">
       <div className="question-card">
         <p className="eyebrow">
-          {question.category} - {question.value}
+          {question.category} - {displayValue}
         </p>
         <h1>{question.question}</h1>
+        <QuestionMedia src={question.questionImage} alt={`Bild zur Frage ${question.id}`} />
 
         {!showAnswer ? (
           <button className="primary-button" type="button" onClick={onShowAnswer}>
@@ -49,6 +53,7 @@ export function QuestionCard({
           <div className="answer-block">
             <p className="eyebrow">Antwort</p>
             <h2>{question.answer}</h2>
+            <QuestionMedia src={question.answerImage} alt={`Bild zur Antwort ${question.id}`} />
             {question.explanation ? <p>{question.explanation}</p> : null}
           </div>
         )}
@@ -67,7 +72,7 @@ export function QuestionCard({
         <section className="host-panel" aria-label="Host-Steuerung">
           <div>
             <p className="eyebrow">Punkte vergeben</p>
-            <h2>{wrongAnswerCostsPoints ? 'Falsche Antworten kosten Punkte' : 'Falsche Antworten kosten nichts'}</h2>
+            <h2>{wrongAnswerCostsPoints ? 'Falsch = halber Punktwert minus' : 'Falsche Antworten kosten nichts'}</h2>
           </div>
           <div className="award-grid">
             {teams.map((team) => (

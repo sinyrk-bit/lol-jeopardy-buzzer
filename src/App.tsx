@@ -30,6 +30,8 @@ function App() {
   const [playerName, setPlayerName] = useState('')
   const [playerMode, setPlayerMode] = useState(Boolean(joinRoomId))
   const hasSavedGame = gameState.teams.length > 0 && !gameState.gameFinished
+  const getQuestionValue = (question: Question, usedCount = gameState.usedQuestions.length) =>
+    questions.length - usedCount <= 5 ? question.value * 2 : question.value
 
   const buzz = (teamId: string) => {
     setGameState((current) => {
@@ -139,11 +141,12 @@ function App() {
         return current
       }
 
+      const effectiveValue = getQuestionValue(current.currentQuestion, current.usedQuestions.length)
       const delta =
         teamId && correct
-          ? current.currentQuestion.value
+          ? effectiveValue
           : teamId && current.wrongAnswerCostsPoints
-            ? -current.currentQuestion.value
+            ? -Math.ceil(effectiveValue / 2)
             : 0
       const usedQuestions = Array.from(new Set([...current.usedQuestions, current.currentQuestion.id]))
       const gameFinished = usedQuestions.length === questions.length
@@ -221,6 +224,7 @@ function App() {
         {gameState.currentQuestion ? (
           <QuestionCard
             question={gameState.currentQuestion}
+            displayValue={getQuestionValue(gameState.currentQuestion)}
             teams={gameState.teams}
             showAnswer={gameState.showAnswer}
             wrongAnswerCostsPoints={gameState.wrongAnswerCostsPoints}
@@ -235,7 +239,12 @@ function App() {
             onToggleBuzzerLock={() => setGameState((current) => ({ ...current, buzzerLocked: !current.buzzerLocked }))}
           />
         ) : (
-          <GameBoard questions={questions} usedQuestions={gameState.usedQuestions} onSelectQuestion={openQuestion} />
+          <GameBoard
+            questions={questions}
+            usedQuestions={gameState.usedQuestions}
+            getQuestionValue={getQuestionValue}
+            onSelectQuestion={openQuestion}
+          />
         )}
       </main>
     )

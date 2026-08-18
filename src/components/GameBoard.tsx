@@ -4,10 +4,11 @@ import type { Question } from '../types/game'
 type GameBoardProps = {
   questions: Question[]
   usedQuestions: string[]
+  getQuestionValue?: (question: Question) => number
   onSelectQuestion: (question: Question) => void
 }
 
-export function GameBoard({ questions, usedQuestions, onSelectQuestion }: GameBoardProps) {
+export function GameBoard({ questions, usedQuestions, getQuestionValue, onSelectQuestion }: GameBoardProps) {
   const findQuestion = (category: string, value: number) =>
     questions.find((question) => question.category === category && question.value === value)
 
@@ -34,7 +35,8 @@ export function GameBoard({ questions, usedQuestions, onSelectQuestion }: GameBo
                 type="button"
                 aria-label={`${category} fuer ${value} Punkte`}
               >
-                <span>{isUsed ? 'Gespielt' : value}</span>
+                <span>{isUsed ? 'Gespielt' : question && getQuestionValue ? getQuestionValue(question) : value}</span>
+                {!isUsed && question && getQuestionValue && getQuestionValue(question) > question.value ? <em>Bonus</em> : null}
               </button>
             )
           }),

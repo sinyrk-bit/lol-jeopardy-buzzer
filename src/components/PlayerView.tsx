@@ -1,4 +1,5 @@
 import { GameBoard } from './GameBoard'
+import { QuestionMedia } from './QuestionMedia'
 import { Scoreboard } from './Scoreboard'
 import type { CSSProperties } from 'react'
 import type { GameState, NetworkStatus, Question } from '../types/game'
@@ -13,6 +14,8 @@ type PlayerViewProps = {
 
 export function PlayerView({ gameState, status, error, onBuzz }: PlayerViewProps) {
   const currentQuestion = gameState.currentQuestion
+  const remaining = questions.length - gameState.usedQuestions.length
+  const displayValue = currentQuestion && remaining <= 5 ? currentQuestion.value * 2 : currentQuestion?.value
 
   return (
     <main className="player-layout">
@@ -30,13 +33,15 @@ export function PlayerView({ gameState, status, error, onBuzz }: PlayerViewProps
       {currentQuestion ? (
         <section className="player-question">
           <p className="eyebrow">
-            {currentQuestion.category} - {currentQuestion.value}
+            {currentQuestion.category} - {displayValue}
           </p>
           <h2>{currentQuestion.question}</h2>
+          <QuestionMedia src={currentQuestion.questionImage} alt={`Bild zur Frage ${currentQuestion.id}`} />
           {gameState.showAnswer ? (
             <div className="answer-block">
               <p className="eyebrow">Antwort</p>
               <h2>{currentQuestion.answer}</h2>
+              <QuestionMedia src={currentQuestion.answerImage} alt={`Bild zur Antwort ${currentQuestion.id}`} />
             </div>
           ) : null}
           <div className="buzzer-buttons">
@@ -59,7 +64,12 @@ export function PlayerView({ gameState, status, error, onBuzz }: PlayerViewProps
           </div>
         </section>
       ) : (
-        <GameBoard questions={questions} usedQuestions={gameState.usedQuestions} onSelectQuestion={(_: Question) => undefined} />
+        <GameBoard
+          questions={questions}
+          usedQuestions={gameState.usedQuestions}
+          getQuestionValue={(question) => (questions.length - gameState.usedQuestions.length <= 5 ? question.value * 2 : question.value)}
+          onSelectQuestion={(_: Question) => undefined}
+        />
       )}
     </main>
   )
