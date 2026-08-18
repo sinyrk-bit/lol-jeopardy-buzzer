@@ -101,9 +101,9 @@ export const questions: Question[] = [
     value: 500,
     mode: 'estimate',
     difficulty: 'hard',
-    question: 'Schätzt: Wie viel RP würden 1899 Skins kosten, wenn jeder einzelne Skin genau 1350 RP kosten würde?',
-    answer: '2.563.650 RP',
-    explanation: '1899 mal 1350 ergibt 2.563.650. Das Team, das am nächsten dran ist, bekommt 300 Punkte.',
+    question: 'Schätzt: Wie viele Tage lagen im Durchschnitt zwischen zwei Champion-Skins, wenn 1899 Skins auf die Zeit seit dem LoL-Release verteilt werden?',
+    answer: '3,23 Tage pro Skin',
+    explanation: '6140 Tage seit Release geteilt durch 1899 Skins ergibt gerundet 3,23. Das Team, das am nächsten dran ist, bekommt 300 Punkte.',
   },
   {
     id: 'abilities-100',
