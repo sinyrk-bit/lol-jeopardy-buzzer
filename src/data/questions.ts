@@ -101,9 +101,9 @@ export const questions: Question[] = [
     value: 500,
     mode: 'estimate',
     difficulty: 'hard',
-    question: 'Schätzt: Wie viele Tage lagen im Durchschnitt zwischen zwei Champion-Skins, wenn 1899 Skins auf die Zeit seit dem LoL-Release verteilt werden?',
-    answer: '3,23 Tage pro Skin',
-    explanation: '6140 Tage seit Release geteilt durch 1899 Skins ergibt gerundet 3,23. Das Team, das am nächsten dran ist, bekommt 300 Punkte.',
+    question: 'Schätzt: Wie viele einzigartige 1v1-Champion-Matchups gibt es, wenn jeder der 173 Champions genau einmal gegen jeden anderen Champion antreten würde?',
+    answer: '14.878 Matchups',
+    explanation: '173 mal 172 geteilt durch 2 ergibt 14.878. Das Team, das am nächsten dran ist, bekommt 300 Punkte.',
   },
   {
     id: 'abilities-100',
