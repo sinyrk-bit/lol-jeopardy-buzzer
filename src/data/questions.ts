@@ -18,7 +18,8 @@ export const questions: Question[] = [
     question: 'Bildfrage: Welcher Champion ist das?',
     answer: 'Lee Sin',
     questionImage: 'question-images/champ-select-100-frage.png',
-    explanation: 'Ersetze das Bild im Ordner public/question-images mit deiner eigenen Champ-Select-PNG.',
+    answerImage: 'question-images/champ-select-100-antwort.png',
+    explanation: 'Ersetze Frage- und Antwortbild im Ordner public/question-images mit deinen eigenen Drip-or-Int-PNGs.',
   },
   {
     id: 'champions-200',
@@ -28,7 +29,8 @@ export const questions: Question[] = [
     question: 'Bildfrage: Welcher Champion ist das?',
     answer: 'Annie',
     questionImage: 'question-images/champ-select-200-frage.png',
-    explanation: 'Ersetze das Bild im Ordner public/question-images mit deiner eigenen Champ-Select-PNG.',
+    answerImage: 'question-images/champ-select-200-antwort.png',
+    explanation: 'Ersetze Frage- und Antwortbild im Ordner public/question-images mit deinen eigenen Drip-or-Int-PNGs.',
   },
   {
     id: 'champions-300',
@@ -38,7 +40,8 @@ export const questions: Question[] = [
     question: 'Bildfrage: Welcher Champion ist das?',
     answer: 'Jayce',
     questionImage: 'question-images/champ-select-300-frage.png',
-    explanation: 'Ersetze das Bild im Ordner public/question-images mit deiner eigenen Champ-Select-PNG.',
+    answerImage: 'question-images/champ-select-300-antwort.png',
+    explanation: 'Ersetze Frage- und Antwortbild im Ordner public/question-images mit deinen eigenen Drip-or-Int-PNGs.',
   },
   {
     id: 'champions-400',
@@ -48,7 +51,8 @@ export const questions: Question[] = [
     question: 'Bildfrage: Welcher Champion ist das?',
     answer: 'Ryze',
     questionImage: 'question-images/champ-select-400-frage.png',
-    explanation: 'Ersetze das Bild im Ordner public/question-images mit deiner eigenen Champ-Select-PNG.',
+    answerImage: 'question-images/champ-select-400-antwort.png',
+    explanation: 'Ersetze Frage- und Antwortbild im Ordner public/question-images mit deinen eigenen Drip-or-Int-PNGs.',
   },
   {
     id: 'champions-500',
@@ -58,7 +62,8 @@ export const questions: Question[] = [
     question: 'Bildfrage: Welcher Champion ist das?',
     answer: 'Senna',
     questionImage: 'question-images/champ-select-500-frage.png',
-    explanation: 'Ersetze das Bild im Ordner public/question-images mit deiner eigenen Champ-Select-PNG.',
+    answerImage: 'question-images/champ-select-500-antwort.png',
+    explanation: 'Ersetze Frage- und Antwortbild im Ordner public/question-images mit deinen eigenen Drip-or-Int-PNGs.',
   },
   {
     id: 'estimate-100',

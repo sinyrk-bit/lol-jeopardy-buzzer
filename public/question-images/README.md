@@ -20,13 +20,13 @@ Unterstützte Browser-Formate sind `.png`, `.jpg`, `.jpeg`, `.webp` und `.svg`. 
 
 ## Kategorie Drip or Int
 
-Die Kategorie `Drip or Int` nutzt aktuell diese PNG-Dateien als Fragebilder. Die Antwort bleibt jeweils nur der Skin- oder Championname:
+Die Kategorie `Drip or Int` nutzt aktuell diese PNG-Dateien als Frage- und Antwortbilder. Die Textantwort bleibt zusätzlich als Host-Hilfe sichtbar:
 
-- `champ-select-100-frage.png` = Lee Sin
-- `champ-select-200-frage.png` = Annie
-- `champ-select-300-frage.png` = Jayce
-- `champ-select-400-frage.png` = Ryze
-- `champ-select-500-frage.png` = Senna
+- `champ-select-100-frage.png` und `champ-select-100-antwort.png` = Lee Sin
+- `champ-select-200-frage.png` und `champ-select-200-antwort.png` = Annie
+- `champ-select-300-frage.png` und `champ-select-300-antwort.png` = Jayce
+- `champ-select-400-frage.png` und `champ-select-400-antwort.png` = Ryze
+- `champ-select-500-frage.png` und `champ-select-500-antwort.png` = Senna
 
 Wenn du deine eigenen Skin-Bilder nutzen willst, ersetze diese PNG-Dateien direkt mit exakt gleichem Dateinamen.
 
