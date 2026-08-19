@@ -16,7 +16,7 @@ Verwende sie in `src/data/questions.ts` so:
 }
 ```
 
-Unterstützte Browser-Formate sind `.png`, `.jpg`, `.jpeg`, `.webp` und `.svg`. Für die Kategorien `Drip or Int`, `Fußfetisch` und `Tiltmoji` sind die Pfade aber bereits fest auf `.png` eingestellt.
+Unterstützte Browser-Formate sind `.png`, `.jpg`, `.jpeg`, `.webp` und `.svg`. Für die Kategorien `Drip or Int`, `Ability Abuse`, `Fußfetisch` und `Tiltmoji` sind die Pfade aber bereits fest auf `.png` eingestellt.
 
 ## Kategorie Drip or Int
 
@@ -29,6 +29,18 @@ Die Kategorie `Drip or Int` nutzt aktuell diese PNG-Dateien als Frage- und Antwo
 - `champ-select-500-frage.png` und `champ-select-500-antwort.png` = Senna
 
 Wenn du deine eigenen Skin-Bilder nutzen willst, ersetze diese PNG-Dateien direkt mit exakt gleichem Dateinamen.
+
+## Kategorie Ability Abuse
+
+Die Kategorie `Ability Abuse` nutzt aktuell diese PNG-Dateien als Frage- und Antwortbilder. Die Textantwort bleibt zusätzlich als Host-Hilfe sichtbar:
+
+- `ability-abuse-100-frage.png` und `ability-abuse-100-antwort.png` = Flash und Heal
+- `ability-abuse-200-frage.png` und `ability-abuse-200-antwort.png` = Wind Wall
+- `ability-abuse-300-frage.png` und `ability-abuse-300-antwort.png` = Root oder Snare
+- `ability-abuse-400-frage.png` und `ability-abuse-400-antwort.png` = Diana
+- `ability-abuse-500-frage.png` und `ability-abuse-500-antwort.png` = Autoattack Reset oder Empowered Auto
+
+Wenn du deine eigenen Ability-Bilder nutzen willst, ersetze diese PNG-Dateien direkt mit exakt gleichem Dateinamen.
 
 ## Kategorie Fussfetisch
 
