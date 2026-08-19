@@ -54,6 +54,20 @@ export type ChatMessage = {
   timestamp: number
 }
 
+export type QuestionUndoState = {
+  teams: Team[]
+  usedQuestions: string[]
+  currentQuestion: Question | null
+  showAnswer: boolean
+  buzzerQueue: BuzzerEntry[]
+  buzzerLocked: boolean
+  activeTeamId: string | null
+  requestedQuestionId: string | null
+  requestedByTeamId: string | null
+  estimateSubmissions: EstimateSubmission[]
+  wrongTeamIds: string[]
+}
+
 export type GameState = {
   teams: Team[]
   usedQuestions: string[]
@@ -69,6 +83,8 @@ export type GameState = {
   requestedByTeamId: string | null
   estimateSubmissions: EstimateSubmission[]
   chatMessages: ChatMessage[]
+  wrongTeamIds: string[]
+  lastQuestionState: QuestionUndoState | null
 }
 
 export type Screen = 'home' | 'setup' | 'game' | 'gameOver'

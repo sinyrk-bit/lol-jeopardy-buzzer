@@ -31,6 +31,8 @@ const emptyGameState: GameState = {
   requestedByTeamId: null,
   estimateSubmissions: [],
   chatMessages: [],
+  wrongTeamIds: [],
+  lastQuestionState: null,
 }
 
 function getNextTeamId(teams: Team[], currentTeamId: string | null) {
@@ -47,6 +49,22 @@ function makeChatId() {
   return `chat-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`
 }
 
+function getUndoState(state: GameState) {
+  return {
+    teams: state.teams,
+    usedQuestions: state.usedQuestions,
+    currentQuestion: state.currentQuestion,
+    showAnswer: state.showAnswer,
+    buzzerQueue: state.buzzerQueue,
+    buzzerLocked: state.buzzerLocked,
+    activeTeamId: state.activeTeamId,
+    requestedQuestionId: state.requestedQuestionId,
+    requestedByTeamId: state.requestedByTeamId,
+    estimateSubmissions: state.estimateSubmissions,
+    wrongTeamIds: state.wrongTeamIds ?? [],
+  }
+}
+
 function App() {
   const joinRoomId = useMemo(() => new URLSearchParams(window.location.search).get('join') ?? '', [])
   const [screen, setScreen] = useLocalStorage<Screen>('lol-jeopardy-screen', joinRoomId ? 'game' : 'home')
@@ -55,6 +73,7 @@ function App() {
   const [playerMode, setPlayerMode] = useState(Boolean(joinRoomId))
   const [showLobby, setShowLobby] = useState(false)
   const [pendingQuestion, setPendingQuestion] = useState<Question | null>(null)
+  const [manualScoreAmount, setManualScoreAmount] = useState(100)
   const players = useMemo(() => gameState.players ?? [], [gameState.players])
   const activeTeamId = gameState.activeTeamId ?? gameState.teams[0]?.id ?? null
   const hasSavedGame = gameState.teams.length > 0 && !gameState.gameFinished
@@ -322,10 +341,108 @@ function App() {
       buzzerQueue: [],
       buzzerLocked: !useBuzzer,
       estimateSubmissions: [],
+      wrongTeamIds: [],
       requestedQuestionId: null,
       requestedByTeamId: null,
     }))
     setPendingQuestion(null)
+  }
+
+  const adjustTeamScore = (teamId: string, delta: number) => {
+    setGameState((current) => ({
+      ...current,
+      teams: current.teams.map((team) => (team.id === teamId ? { ...team, score: team.score + delta } : team)),
+    }))
+  }
+
+  const restoreLastQuestion = () => {
+    setGameState((current) => {
+      if (!current.lastQuestionState) {
+        return current
+      }
+
+      return {
+        ...current,
+        ...current.lastQuestionState,
+        gameFinished: false,
+        chatMessages: current.chatMessages ?? [],
+        players: current.players ?? [],
+        wrongAnswerCostsPoints: current.wrongAnswerCostsPoints,
+        lastQuestionState: null,
+      }
+    })
+    setScreen('game')
+  }
+
+  const closeQuestionWithoutAward = () => {
+    setGameState((current) => {
+      if (!current.currentQuestion) {
+        return current
+      }
+
+      const usedQuestions = Array.from(new Set([...current.usedQuestions, current.currentQuestion.id]))
+      const gameFinished = usedQuestions.length === questions.length
+
+      if (gameFinished) {
+        setScreen('gameOver')
+      }
+
+      return {
+        ...current,
+        lastQuestionState: getUndoState(current),
+        usedQuestions,
+        activeTeamId: getNextTeamId(current.teams, current.activeTeamId),
+        currentQuestion: null,
+        showAnswer: false,
+        gameFinished,
+        buzzerQueue: [],
+        buzzerLocked: true,
+        estimateSubmissions: [],
+        wrongTeamIds: [],
+        requestedQuestionId: null,
+        requestedByTeamId: null,
+      }
+    })
+  }
+
+  const markWrongAnswer = (teamId: string) => {
+    setGameState((current) => {
+      if (!current.currentQuestion || current.currentQuestion.mode === 'estimate') {
+        return current
+      }
+
+      const effectiveValue = getQuestionValue(current.currentQuestion, current.usedQuestions.length)
+      const nextWrongTeamIds = Array.from(new Set([...(current.wrongTeamIds ?? []), teamId]))
+      const nextQueue = (current.buzzerQueue ?? []).filter((entry) => entry.teamId !== teamId)
+      const shouldCloseQuestion = nextQueue.length === 0
+      const usedQuestions = shouldCloseQuestion
+        ? Array.from(new Set([...current.usedQuestions, current.currentQuestion.id]))
+        : current.usedQuestions
+      const gameFinished = shouldCloseQuestion && usedQuestions.length === questions.length
+
+      if (gameFinished) {
+        setScreen('gameOver')
+      }
+
+      return {
+        ...current,
+        lastQuestionState: shouldCloseQuestion ? getUndoState(current) : current.lastQuestionState,
+        teams: current.teams.map((team) =>
+          team.id === teamId ? { ...team, score: team.score - Math.ceil(effectiveValue / 2) } : team,
+        ),
+        usedQuestions,
+        activeTeamId: shouldCloseQuestion ? getNextTeamId(current.teams, current.activeTeamId) : current.activeTeamId,
+        currentQuestion: shouldCloseQuestion ? null : current.currentQuestion,
+        showAnswer: shouldCloseQuestion ? false : current.showAnswer,
+        gameFinished,
+        buzzerQueue: nextQueue.map((entry, index) => ({ ...entry, order: index + 1 })),
+        buzzerLocked: shouldCloseQuestion ? true : current.buzzerLocked,
+        estimateSubmissions: shouldCloseQuestion ? [] : current.estimateSubmissions,
+        wrongTeamIds: shouldCloseQuestion ? [] : nextWrongTeamIds,
+        requestedQuestionId: shouldCloseQuestion ? null : current.requestedQuestionId,
+        requestedByTeamId: shouldCloseQuestion ? null : current.requestedByTeamId,
+      }
+    })
   }
 
   const finishQuestion = (teamIds?: string | string[], correct?: boolean) => {
@@ -345,6 +462,7 @@ function App() {
 
       return {
         ...current,
+        lastQuestionState: getUndoState(current),
         teams: current.teams.map((team) => {
           if (!awardedTeamIds.has(team.id)) {
             return team
@@ -366,6 +484,7 @@ function App() {
         buzzerQueue: [],
         buzzerLocked: true,
         estimateSubmissions: [],
+        wrongTeamIds: [],
         requestedQuestionId: null,
         requestedByTeamId: null,
       }
@@ -449,6 +568,32 @@ function App() {
             }))
           }
         />
+        <section className="quick-host-tools" aria-label="Host-Schnellkorrekturen">
+          <label className="manual-score-input">
+            Punkte
+            <input
+              min="0"
+              step="50"
+              type="number"
+              value={manualScoreAmount}
+              onChange={(event) => setManualScoreAmount(Math.max(0, Number(event.target.value) || 0))}
+            />
+          </label>
+          {gameState.teams.map((team) => (
+            <div className="quick-score-buttons" key={team.id}>
+              <span>{team.name}</span>
+              <button className="secondary-button" type="button" onClick={() => adjustTeamScore(team.id, -manualScoreAmount)}>
+                -{manualScoreAmount}
+              </button>
+              <button className="secondary-button" type="button" onClick={() => adjustTeamScore(team.id, manualScoreAmount)}>
+                +{manualScoreAmount}
+              </button>
+            </div>
+          ))}
+          <button className="secondary-button" disabled={!gameState.lastQuestionState} type="button" onClick={restoreLastQuestion}>
+            Letzte Frage zurückholen
+          </button>
+        </section>
 
         {gameState.currentQuestion ? (
           <QuestionCard
@@ -460,9 +605,12 @@ function App() {
             buzzerQueue={gameState.buzzerQueue}
             buzzerLocked={gameState.buzzerLocked}
             estimateSubmissions={gameState.estimateSubmissions ?? []}
+            wrongTeamIds={gameState.wrongTeamIds ?? []}
+            canRestoreLastQuestion={Boolean(gameState.lastQuestionState)}
             onShowAnswer={() => setGameState((current) => ({ ...current, showAnswer: true, buzzerLocked: true }))}
             onAward={(teamId, correct) => finishQuestion(teamId, correct)}
-            onNoAnswer={() => finishQuestion()}
+            onWrongAttempt={markWrongAnswer}
+            onNoAnswer={closeQuestionWithoutAward}
             onBackToBoard={() =>
               setGameState((current) => ({
                 ...current,
@@ -473,6 +621,8 @@ function App() {
                 requestedByTeamId: null,
               }))
             }
+            onRestoreLastQuestion={restoreLastQuestion}
+            onAdjustScore={adjustTeamScore}
             onBuzz={buzz}
             onResetBuzzers={() => setGameState((current) => ({ ...current, buzzerQueue: [], buzzerLocked: true }))}
             onToggleBuzzerLock={() => setGameState((current) => ({ ...current, buzzerLocked: !current.buzzerLocked }))}

@@ -883,6 +883,62 @@ p {
   box-shadow: 0 0 18px rgba(0, 245, 255, 0.28);
 }
 
+.manual-score-panel {
+  display: grid;
+  gap: 10px;
+}
+
+.manual-score-input {
+  align-items: center;
+  color: var(--muted);
+  display: grid;
+  font-size: 0.72rem;
+  font-weight: 900;
+  gap: 5px;
+  max-width: 180px;
+  text-transform: uppercase;
+}
+
+.manual-score-input input {
+  background: rgba(0, 0, 0, 0.38);
+  border: 1px solid rgba(0, 234, 255, 0.28);
+  border-radius: 3px;
+  color: var(--text);
+  min-height: 34px;
+  padding: 7px 9px;
+}
+
+.quick-host-tools {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+  min-height: 34px;
+}
+
+.quick-score-buttons {
+  align-items: center;
+  display: flex;
+  gap: 4px;
+}
+
+.quick-score-buttons span {
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 900;
+  max-width: 110px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.quick-score-buttons button {
+  min-height: 28px;
+  padding: 4px 6px;
+}
+
 .player-layout {
   display: grid;
   gap: 8px;

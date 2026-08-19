@@ -12,10 +12,15 @@ type QuestionCardProps = {
   buzzerQueue: BuzzerEntry[]
   buzzerLocked: boolean
   estimateSubmissions: EstimateSubmission[]
+  wrongTeamIds: string[]
+  canRestoreLastQuestion: boolean
   onShowAnswer: () => void
   onAward: (teamIds: string | string[], correct: boolean) => void
+  onWrongAttempt: (teamId: string) => void
   onNoAnswer: () => void
   onBackToBoard: () => void
+  onRestoreLastQuestion: () => void
+  onAdjustScore: (teamId: string, delta: number) => void
   onBuzz: (teamId: string) => void
   onResetBuzzers: () => void
   onToggleBuzzerLock: () => void
@@ -30,10 +35,15 @@ export function QuestionCard({
   buzzerQueue,
   buzzerLocked,
   estimateSubmissions,
+  wrongTeamIds,
+  canRestoreLastQuestion,
   onShowAnswer,
   onAward,
+  onWrongAttempt,
   onNoAnswer,
   onBackToBoard,
+  onRestoreLastQuestion,
+  onAdjustScore,
   onBuzz,
   onResetBuzzers,
   onToggleBuzzerLock,
@@ -41,13 +51,15 @@ export function QuestionCard({
   const isEstimateQuestion = question.mode === 'estimate'
   const hasAnswerText = question.answer.trim().length > 0
   const [selectedEstimateWinnerIds, setSelectedEstimateWinnerIds] = useState<string[]>([])
+  const [manualScoreAmount, setManualScoreAmount] = useState(displayValue)
   const finalizedEstimateCount = teams.filter((team) =>
     estimateSubmissions.some((submission) => submission.teamId === team.id && submission.finalized),
   ).length
 
   useEffect(() => {
     setSelectedEstimateWinnerIds([])
-  }, [question.id])
+    setManualScoreAmount(displayValue)
+  }, [displayValue, question.id])
 
   const toggleEstimateWinner = (teamId: string) => {
     setSelectedEstimateWinnerIds((current) =>
@@ -154,8 +166,8 @@ export function QuestionCard({
                     <button type="button" onClick={() => onAward(team.id, true)}>
                       Richtig
                     </button>
-                    <button type="button" onClick={() => onAward(team.id, false)}>
-                      Falsch
+                    <button disabled={wrongTeamIds.includes(team.id)} type="button" onClick={() => onWrongAttempt(team.id)}>
+                      {wrongTeamIds.includes(team.id) ? 'Schon falsch' : 'Falsch'}
                     </button>
                   </div>
                 )}
@@ -182,6 +194,43 @@ export function QuestionCard({
           </div>
         </section>
       ) : null}
+
+      <section className="host-panel manual-score-panel" aria-label="Host-Korrekturen">
+        <div>
+          <p className="eyebrow">Host-Korrektur</p>
+          <h2>Punkte manuell ändern</h2>
+        </div>
+        <label className="manual-score-input">
+          Betrag
+          <input
+            min="0"
+            step="50"
+            type="number"
+            value={manualScoreAmount}
+            onChange={(event) => setManualScoreAmount(Math.max(0, Number(event.target.value) || 0))}
+          />
+        </label>
+        <div className="award-grid">
+          {teams.map((team) => (
+            <div className="award-card" key={team.id} style={{ '--team-color': team.color } as CSSProperties}>
+              <strong>{team.name}</strong>
+              <div>
+                <button type="button" onClick={() => onAdjustScore(team.id, -manualScoreAmount)}>
+                  -{manualScoreAmount}
+                </button>
+                <button type="button" onClick={() => onAdjustScore(team.id, manualScoreAmount)}>
+                  +{manualScoreAmount}
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="host-actions">
+          <button className="secondary-button" disabled={!canRestoreLastQuestion} type="button" onClick={onRestoreLastQuestion}>
+            Letzte Frage zurückholen
+          </button>
+        </div>
+      </section>
     </section>
   )
 }
