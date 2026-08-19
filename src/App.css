@@ -1021,6 +1021,13 @@ p {
   z-index: 35;
 }
 
+.chat-panel.is-minimized {
+  gap: 0;
+  max-height: none;
+  padding: 8px 10px;
+  width: min(260px, calc(100vw - 24px));
+}
+
 .chat-header {
   align-items: center;
   display: grid;
@@ -1041,8 +1048,15 @@ p {
   gap: 5px;
 }
 
+.chat-header-actions {
+  align-items: center;
+  display: flex;
+  gap: 5px;
+}
+
 .chat-tabs button,
-.chat-team-select {
+.chat-team-select,
+.chat-minimize-button {
   background: rgba(0, 234, 255, 0.08);
   border: 1px solid rgba(0, 234, 255, 0.24);
   border-radius: 3px;
@@ -1051,6 +1065,11 @@ p {
   min-height: 30px;
   padding: 5px 8px;
   text-transform: uppercase;
+}
+
+.chat-minimize-button {
+  color: var(--gold-hot);
+  white-space: nowrap;
 }
 
 .chat-tabs button.is-active {
