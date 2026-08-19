@@ -26,7 +26,7 @@ export function QuestionCard({
   displayValue,
   teams,
   showAnswer,
-  wrongAnswerCostsPoints,
+  wrongAnswerCostsPoints: _wrongAnswerCostsPoints,
   buzzerQueue,
   buzzerLocked,
   estimateSubmissions,
@@ -133,9 +133,7 @@ export function QuestionCard({
             <h2>
               {isEstimateQuestion
                 ? 'Das Team mit der nächsten Schätzung bekommt die Punkte'
-                : wrongAnswerCostsPoints
-                  ? 'Falsch = halber Punktwert minus'
-                  : 'Falsche Antworten kosten nichts'}
+                : 'Falsch = halber Punktwert minus'}
             </h2>
           </div>
           <div className="award-grid">

@@ -352,7 +352,7 @@ function App() {
 
           const delta = correct
             ? effectiveValue
-            : current.wrongAnswerCostsPoints && current.currentQuestion?.mode !== 'estimate'
+            : current.currentQuestion?.mode !== 'estimate'
               ? -Math.ceil(effectiveValue / 2)
               : 0
 
