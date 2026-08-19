@@ -10,6 +10,7 @@ type UseRoomOptions = {
 
 const roomPrefix = 'lol-jp-'
 const playerIdStorageKey = 'lol-jeopardy-player-id'
+const hostRoomStorageKey = 'lol-jeopardy-host-room-id'
 
 function makeRoomId() {
   return `${roomPrefix}${Math.random().toString(36).slice(2, 8)}`
@@ -45,7 +46,7 @@ function getRoomServerUrl() {
 }
 
 export function useRoom({ initialRoomId, getSnapshot, onPlayerMessage, onHostMessage }: UseRoomOptions = {}) {
-  const [roomId, setRoomId] = useState(initialRoomId ?? '')
+  const [roomId, setRoomId] = useState(() => initialRoomId || window.localStorage.getItem(hostRoomStorageKey) || '')
   const [playerId] = useState(getStoredPlayerId)
   const [status, setStatus] = useState<NetworkStatus>('idle')
   const [error, setError] = useState('')
@@ -140,7 +141,8 @@ export function useRoom({ initialRoomId, getSnapshot, onPlayerMessage, onHostMes
   )
 
   const hostRoom = useCallback(() => {
-    const nextRoomId = makeRoomId()
+    const nextRoomId = roomId || makeRoomId()
+    window.localStorage.setItem(hostRoomStorageKey, nextRoomId)
     setRoomId(nextRoomId)
     connectSocket((socket) => {
       isHostRef.current = true
@@ -150,7 +152,7 @@ export function useRoom({ initialRoomId, getSnapshot, onPlayerMessage, onHostMes
         socket.send(JSON.stringify({ type: 'snapshot', payload: snapshot }))
       }
     })
-  }, [connectSocket])
+  }, [connectSocket, roomId])
 
   const joinRoom = useCallback(
     (targetRoomId: string, playerName: string) => {

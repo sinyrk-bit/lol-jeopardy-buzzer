@@ -243,6 +243,14 @@ function App() {
     })
   }, [broadcastSnapshot, gameState, guestCount, inviteUrl, playerMode, players, screen])
 
+  useEffect(() => {
+    if (playerMode || screen !== 'game' || gameState.teams.length === 0 || status === 'connected' || status === 'connecting') {
+      return
+    }
+
+    hostRoom()
+  }, [gameState.teams.length, hostRoom, playerMode, screen, status])
+
   const startGame = (teams: Team[], wrongAnswerCostsPoints: boolean) => {
     setGameState({
       ...emptyGameState,
