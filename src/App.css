@@ -908,58 +908,6 @@ p {
   padding: 7px 9px;
 }
 
-.quick-host-tools {
-  align-items: center;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  justify-content: flex-end;
-  min-height: 34px;
-  position: relative;
-  z-index: 25;
-}
-
-.quick-host-tools-drawer {
-  backdrop-filter: blur(8px) saturate(1.15);
-  background:
-    linear-gradient(135deg, rgba(0, 234, 255, 0.12), transparent 34%),
-    rgba(3, 8, 18, 0.88);
-  border: 1px solid rgba(0, 234, 255, 0.28);
-  border-radius: 4px;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.34);
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  justify-content: flex-end;
-  max-width: min(760px, calc(100vw - 24px));
-  padding: 8px;
-  position: absolute;
-  right: 0;
-  top: calc(100% + 6px);
-}
-
-.quick-score-buttons {
-  align-items: center;
-  display: flex;
-  gap: 4px;
-}
-
-.quick-score-buttons span {
-  color: var(--muted);
-  font-size: 0.68rem;
-  font-weight: 900;
-  max-width: 110px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
-.quick-score-buttons button {
-  min-height: 28px;
-  padding: 4px 6px;
-}
-
 .player-layout {
   display: grid;
   gap: 8px;
