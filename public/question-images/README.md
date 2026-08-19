@@ -16,7 +16,19 @@ Verwende sie in `src/data/questions.ts` so:
 }
 ```
 
-Unterstützte Browser-Formate sind `.png`, `.jpg`, `.jpeg`, `.webp` und `.svg`. Für die Kategorien `Fußfetisch` und `Tiltmoji` sind die Pfade aber bereits fest auf `.png` eingestellt.
+Unterstützte Browser-Formate sind `.png`, `.jpg`, `.jpeg`, `.webp` und `.svg`. Für die Kategorien `Champ Select`, `Fußfetisch` und `Tiltmoji` sind die Pfade aber bereits fest auf `.png` eingestellt.
+
+## Kategorie Champ Select
+
+Die Kategorie `Champ Select` nutzt aktuell diese PNG-Dateien als Fragebilder. Die Antwort bleibt jeweils nur der Championname:
+
+- `champ-select-100-frage.png` = Lee Sin
+- `champ-select-200-frage.png` = Annie
+- `champ-select-300-frage.png` = Jayce
+- `champ-select-400-frage.png` = Ryze
+- `champ-select-500-frage.png` = Senna
+
+Wenn du deine eigenen Champion-Bilder nutzen willst, ersetze diese PNG-Dateien direkt mit exakt gleichem Dateinamen.
 
 ## Kategorie Fussfetisch
 
