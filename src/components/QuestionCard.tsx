@@ -39,6 +39,7 @@ export function QuestionCard({
   onToggleBuzzerLock,
 }: QuestionCardProps) {
   const isEstimateQuestion = question.mode === 'estimate'
+  const hasAnswerText = question.answer.trim().length > 0
   const [selectedEstimateWinnerIds, setSelectedEstimateWinnerIds] = useState<string[]>([])
   const finalizedEstimateCount = teams.filter((team) =>
     estimateSubmissions.some((submission) => submission.teamId === team.id && submission.finalized),
@@ -65,7 +66,7 @@ export function QuestionCard({
 
         <div className="host-answer-preview">
           <p className="eyebrow">Nur Host sieht die Antwort</p>
-          <h2>{question.answer}</h2>
+          {hasAnswerText ? <h2>{question.answer}</h2> : null}
           <QuestionMedia src={question.answerImage} alt={`Bild zur Antwort ${question.id}`} />
           {question.explanation ? <p>{question.explanation}</p> : null}
         </div>
@@ -79,7 +80,7 @@ export function QuestionCard({
         {showAnswer ? (
           <div className="answer-block public-answer">
             <p className="eyebrow">Jetzt sichtbar für Spieler</p>
-            <h2>{question.answer}</h2>
+            {hasAnswerText ? <h2>{question.answer}</h2> : null}
             <QuestionMedia src={question.answerImage} alt={`Bild zur Antwort ${question.id}`} />
             {question.explanation ? <p>{question.explanation}</p> : null}
           </div>

@@ -43,6 +43,7 @@ export function PlayerView({
     ? (gameState.estimateSubmissions ?? []).find((submission) => submission.teamId === assignedTeam.id)
     : null
   const isEstimateQuestion = currentQuestion?.mode === 'estimate'
+  const hasAnswerText = currentQuestion ? currentQuestion.answer.trim().length > 0 : false
   const estimateTeamsWithPlayers = gameState.teams.filter((team) =>
     (gameState.players ?? []).some((player) => player.teamId === team.id && player.connected),
   )
@@ -96,7 +97,7 @@ export function PlayerView({
           {gameState.showAnswer ? (
             <div className="answer-block">
               <p className="eyebrow">Antwort</p>
-              <h2>{currentQuestion.answer}</h2>
+              {hasAnswerText ? <h2>{currentQuestion.answer}</h2> : null}
               <QuestionMedia src={currentQuestion.answerImage} alt={`Bild zur Antwort ${currentQuestion.id}`} />
             </div>
           ) : null}
