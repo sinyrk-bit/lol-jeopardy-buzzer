@@ -26,6 +26,22 @@ type QuestionCardProps = {
   onToggleBuzzerLock: () => void
 }
 
+function getQuestionTextClassName(text: string) {
+  if (text.length > 150) {
+    return 'question-title is-xs'
+  }
+
+  if (text.length > 115) {
+    return 'question-title is-sm'
+  }
+
+  if (text.length > 80) {
+    return 'question-title is-md'
+  }
+
+  return 'question-title'
+}
+
 export function QuestionCard({
   question,
   displayValue,
@@ -73,7 +89,7 @@ export function QuestionCard({
         <p className="eyebrow">
           {question.category} - {displayValue}
         </p>
-        <h1>{question.question}</h1>
+        <h1 className={getQuestionTextClassName(question.question)}>{question.question}</h1>
         <QuestionMedia src={question.questionImage} alt={`Bild zur Frage ${question.id}`} />
 
         <div className="host-answer-preview">
