@@ -1,6 +1,6 @@
 import { BuzzerPanel } from './BuzzerPanel'
 import { QuestionMedia } from './QuestionMedia'
-import type { CSSProperties } from 'react'
+import { useEffect, useState, type CSSProperties } from 'react'
 import type { BuzzerEntry, EstimateSubmission, Question, Team } from '../types/game'
 
 type QuestionCardProps = {
@@ -13,7 +13,7 @@ type QuestionCardProps = {
   buzzerLocked: boolean
   estimateSubmissions: EstimateSubmission[]
   onShowAnswer: () => void
-  onAward: (teamId: string, correct: boolean) => void
+  onAward: (teamIds: string | string[], correct: boolean) => void
   onNoAnswer: () => void
   onBackToBoard: () => void
   onBuzz: (teamId: string) => void
@@ -39,9 +39,20 @@ export function QuestionCard({
   onToggleBuzzerLock,
 }: QuestionCardProps) {
   const isEstimateQuestion = question.mode === 'estimate'
+  const [selectedEstimateWinnerIds, setSelectedEstimateWinnerIds] = useState<string[]>([])
   const finalizedEstimateCount = teams.filter((team) =>
     estimateSubmissions.some((submission) => submission.teamId === team.id && submission.finalized),
   ).length
+
+  useEffect(() => {
+    setSelectedEstimateWinnerIds([])
+  }, [question.id])
+
+  const toggleEstimateWinner = (teamId: string) => {
+    setSelectedEstimateWinnerIds((current) =>
+      current.includes(teamId) ? current.filter((id) => id !== teamId) : [...current, teamId],
+    )
+  }
 
   return (
     <section className="question-stage" aria-label="Aktuelle Frage">
@@ -131,8 +142,13 @@ export function QuestionCard({
               <div className="award-card" key={team.id} style={{ '--team-color': team.color } as CSSProperties}>
                 <strong>{team.name}</strong>
                 {isEstimateQuestion ? (
-                  <button type="button" onClick={() => onAward(team.id, true)}>
-                    Am nächsten
+                  <button
+                    className={selectedEstimateWinnerIds.includes(team.id) ? 'is-selected' : ''}
+                    type="button"
+                    aria-pressed={selectedEstimateWinnerIds.includes(team.id)}
+                    onClick={() => toggleEstimateWinner(team.id)}
+                  >
+                    {selectedEstimateWinnerIds.includes(team.id) ? 'Ausgewählt' : 'Am nächsten'}
                   </button>
                 ) : (
                   <div>
@@ -148,6 +164,16 @@ export function QuestionCard({
             ))}
           </div>
           <div className="host-actions">
+            {isEstimateQuestion ? (
+              <button
+                className="primary-button"
+                disabled={selectedEstimateWinnerIds.length === 0}
+                type="button"
+                onClick={() => onAward(selectedEstimateWinnerIds, true)}
+              >
+                Punkte an Auswahl vergeben
+              </button>
+            ) : null}
             <button className="secondary-button" type="button" onClick={onNoAnswer}>
               Niemand richtig
             </button>

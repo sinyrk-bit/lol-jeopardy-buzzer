@@ -876,6 +876,13 @@ p {
   border-color: var(--cyan);
 }
 
+.award-card button.is-selected {
+  background: linear-gradient(90deg, var(--cyan), var(--gold));
+  border-color: var(--gold);
+  color: #020712;
+  box-shadow: 0 0 18px rgba(0, 245, 255, 0.28);
+}
+
 .player-layout {
   display: grid;
   gap: 8px;

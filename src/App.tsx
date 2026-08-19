@@ -320,19 +320,14 @@ function App() {
     setPendingQuestion(null)
   }
 
-  const finishQuestion = (teamId?: string, correct?: boolean) => {
+  const finishQuestion = (teamIds?: string | string[], correct?: boolean) => {
     setGameState((current) => {
       if (!current.currentQuestion) {
         return current
       }
 
+      const awardedTeamIds = new Set(Array.isArray(teamIds) ? teamIds : teamIds ? [teamIds] : [])
       const effectiveValue = getQuestionValue(current.currentQuestion, current.usedQuestions.length)
-      const delta =
-        teamId && correct
-          ? effectiveValue
-          : teamId && current.wrongAnswerCostsPoints && current.currentQuestion.mode !== 'estimate'
-            ? -Math.ceil(effectiveValue / 2)
-            : 0
       const usedQuestions = Array.from(new Set([...current.usedQuestions, current.currentQuestion.id]))
       const gameFinished = usedQuestions.length === questions.length
 
@@ -342,7 +337,19 @@ function App() {
 
       return {
         ...current,
-        teams: current.teams.map((team) => (team.id === teamId ? { ...team, score: team.score + delta } : team)),
+        teams: current.teams.map((team) => {
+          if (!awardedTeamIds.has(team.id)) {
+            return team
+          }
+
+          const delta = correct
+            ? effectiveValue
+            : current.wrongAnswerCostsPoints && current.currentQuestion?.mode !== 'estimate'
+              ? -Math.ceil(effectiveValue / 2)
+              : 0
+
+          return { ...team, score: team.score + delta }
+        }),
         usedQuestions,
         activeTeamId: getNextTeamId(current.teams, current.activeTeamId),
         currentQuestion: null,
