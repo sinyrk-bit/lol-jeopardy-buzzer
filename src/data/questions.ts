@@ -68,7 +68,7 @@ export const questions: Question[] = [
   {
     id: 'estimate-100',
     category: 'Kluft-Kalkulation',
-    value: 100,
+    value: 300,
     mode: 'estimate',
     difficulty: 'medium',
     question: 'Schätzt: Wie viele Champion-Skins gibt es aktuell in League of Legends, ohne Chromas?',
@@ -78,7 +78,7 @@ export const questions: Question[] = [
   {
     id: 'estimate-200',
     category: 'Kluft-Kalkulation',
-    value: 200,
+    value: 300,
     mode: 'estimate',
     difficulty: 'hard',
     question: 'Schätzt: Wie viele Champions gibt es aktuell in League of Legends?',
@@ -98,7 +98,7 @@ export const questions: Question[] = [
   {
     id: 'estimate-400',
     category: 'Kluft-Kalkulation',
-    value: 400,
+    value: 300,
     mode: 'estimate',
     difficulty: 'hard',
     question: 'Schätzt: Wie viele Skins hat ein Champion im Durchschnitt, wenn man 1899 Skins auf 173 Champions verteilt?',
@@ -108,7 +108,7 @@ export const questions: Question[] = [
   {
     id: 'estimate-500',
     category: 'Kluft-Kalkulation',
-    value: 500,
+    value: 300,
     mode: 'estimate',
     difficulty: 'hard',
     question: 'Schätzt: Wie viele einzigartige 1v1-Champion-Matchups gibt es, wenn jeder aktuelle Champion genau einmal gegen jeden anderen aktuellen Champion antreten würde?',
