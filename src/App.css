@@ -252,6 +252,14 @@ p {
   margin-top: 12px;
 }
 
+.question-card > .screen-actions {
+  background: linear-gradient(180deg, transparent, rgba(3, 8, 18, 0.82) 32%);
+  bottom: 0;
+  padding-top: 8px;
+  position: sticky;
+  z-index: 2;
+}
+
 .primary-button,
 .secondary-button,
 .brand-button {
@@ -666,19 +674,24 @@ p {
   grid-template-columns: minmax(0, 1.12fr) minmax(270px, 0.88fr);
   grid-template-rows: minmax(0, 1fr) minmax(130px, auto);
   min-height: 0;
-  overflow: hidden;
+  overflow: auto;
+  padding-right: 3px;
 }
 
 .question-card {
   display: grid;
-  align-content: center;
+  align-content: start;
+  gap: 8px;
   min-height: 0;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .question-card h1 {
-  font-size: clamp(1.6rem, 3.5vw, 4rem);
-  line-height: 0.96;
+  font-size: clamp(1.35rem, 3vw, 3.3rem);
+  line-height: 0.95;
+  max-height: min(36vh, 330px);
+  overflow: auto;
+  padding-right: 4px;
 }
 
 .answer-block {
@@ -694,7 +707,7 @@ p {
   border: 1px solid rgba(255, 31, 191, 0.36);
   border-left: 4px solid var(--pink);
   margin-top: 8px;
-  max-height: 28vh;
+  max-height: 24vh;
   overflow: auto;
   padding: 10px;
 }
