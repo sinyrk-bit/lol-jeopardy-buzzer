@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import type { CSSProperties } from 'react'
 import type { ChatMessage, ChatScope, Team } from '../types/game'
 
@@ -16,14 +16,19 @@ export function ChatPanel({ messages, teams, role, currentTeamId, onSend }: Chat
   const [text, setText] = useState('')
   const [isMinimized, setIsMinimized] = useState(false)
   const [seenMessageCount, setSeenMessageCount] = useState(messages.length)
+  const messagesRef = useRef<HTMLDivElement | null>(null)
   const targetTeamId = role === 'host' ? hostTeamId : currentTeamId
   const selectedTeam = teams.find((team) => team.id === targetTeamId)
   const visibleMessages = useMemo(
     () =>
       messages
-        .filter((message) => message.scope === 'public' || role === 'host' || message.teamId === currentTeamId)
+        .filter((message) =>
+          scope === 'public'
+            ? message.scope === 'public'
+            : message.scope === 'team' && (role === 'host' ? message.teamId === hostTeamId : message.teamId === currentTeamId),
+        )
         .slice(-30),
-    [currentTeamId, messages, role],
+    [currentTeamId, hostTeamId, messages, role, scope],
   )
   const unreadCount = isMinimized ? Math.max(0, visibleMessages.length - seenMessageCount) : 0
 
@@ -46,6 +51,12 @@ export function ChatPanel({ messages, teams, role, currentTeamId, onSend }: Chat
   useEffect(() => {
     if (!isMinimized) {
       setSeenMessageCount(visibleMessages.length)
+    }
+  }, [isMinimized, visibleMessages.length])
+
+  useEffect(() => {
+    if (!isMinimized && messagesRef.current) {
+      messagesRef.current.scrollTop = messagesRef.current.scrollHeight
     }
   }, [isMinimized, visibleMessages.length])
 
@@ -95,7 +106,7 @@ export function ChatPanel({ messages, teams, role, currentTeamId, onSend }: Chat
 
       {!isMinimized ? (
         <>
-          <div className="chat-messages">
+          <div className="chat-messages" ref={messagesRef}>
             {visibleMessages.length === 0 ? (
               <p className="chat-empty">Noch keine Nachrichten.</p>
             ) : (
