@@ -721,13 +721,47 @@ p {
   border: 1px solid rgba(255, 31, 191, 0.36);
   border-left: 4px solid var(--pink);
   margin-top: 8px;
-  max-height: 24vh;
-  overflow: auto;
+  overflow: hidden;
   padding: 10px;
 }
 
+.answer-title,
 .host-answer-preview h2 {
   color: var(--gold-hot);
+  font-size: clamp(1.05rem, 2vw, 1.75rem);
+  line-height: 0.98;
+  margin-bottom: 0.25rem;
+  overflow-wrap: anywhere;
+}
+
+.answer-title.is-md {
+  font-size: clamp(0.95rem, 1.65vw, 1.45rem);
+}
+
+.answer-title.is-sm {
+  font-size: clamp(0.82rem, 1.35vw, 1.16rem);
+}
+
+.answer-title.is-xs {
+  font-size: clamp(0.72rem, 1.05vw, 0.95rem);
+  line-height: 1.04;
+}
+
+.answer-explanation {
+  font-size: clamp(0.78rem, 1.15vw, 0.95rem);
+  line-height: 1.12;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.answer-explanation.is-md {
+  font-size: clamp(0.72rem, 1vw, 0.84rem);
+}
+
+.answer-explanation.is-sm,
+.answer-explanation.is-xs {
+  font-size: clamp(0.66rem, 0.88vw, 0.76rem);
+  line-height: 1.08;
 }
 
 .public-answer {

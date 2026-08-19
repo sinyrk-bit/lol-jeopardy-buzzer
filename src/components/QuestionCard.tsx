@@ -26,20 +26,20 @@ type QuestionCardProps = {
   onToggleBuzzerLock: () => void
 }
 
-function getQuestionTextClassName(text: string) {
+function getScaledTextClassName(baseClassName: string, text: string) {
   if (text.length > 150) {
-    return 'question-title is-xs'
+    return `${baseClassName} is-xs`
   }
 
   if (text.length > 115) {
-    return 'question-title is-sm'
+    return `${baseClassName} is-sm`
   }
 
   if (text.length > 80) {
-    return 'question-title is-md'
+    return `${baseClassName} is-md`
   }
 
-  return 'question-title'
+  return baseClassName
 }
 
 export function QuestionCard({
@@ -89,14 +89,14 @@ export function QuestionCard({
         <p className="eyebrow">
           {question.category} - {displayValue}
         </p>
-        <h1 className={getQuestionTextClassName(question.question)}>{question.question}</h1>
+        <h1 className={getScaledTextClassName('question-title', question.question)}>{question.question}</h1>
         <QuestionMedia src={question.questionImage} alt={`Bild zur Frage ${question.id}`} />
 
         <div className="host-answer-preview">
           <p className="eyebrow">Nur Host sieht die Antwort</p>
-          {hasAnswerText ? <h2>{question.answer}</h2> : null}
+          {hasAnswerText ? <h2 className={getScaledTextClassName('answer-title', question.answer)}>{question.answer}</h2> : null}
           <QuestionMedia src={question.answerImage} alt={`Bild zur Antwort ${question.id}`} />
-          {question.explanation ? <p>{question.explanation}</p> : null}
+          {question.explanation ? <p className={getScaledTextClassName('answer-explanation', question.explanation)}>{question.explanation}</p> : null}
         </div>
 
         <div className="screen-actions">
@@ -108,9 +108,9 @@ export function QuestionCard({
         {showAnswer ? (
           <div className="answer-block public-answer">
             <p className="eyebrow">Jetzt sichtbar für Spieler</p>
-            {hasAnswerText ? <h2>{question.answer}</h2> : null}
+            {hasAnswerText ? <h2 className={getScaledTextClassName('answer-title', question.answer)}>{question.answer}</h2> : null}
             <QuestionMedia src={question.answerImage} alt={`Bild zur Antwort ${question.id}`} />
-            {question.explanation ? <p>{question.explanation}</p> : null}
+            {question.explanation ? <p className={getScaledTextClassName('answer-explanation', question.explanation)}>{question.explanation}</p> : null}
           </div>
         ) : null}
       </div>
