@@ -1,7 +1,7 @@
 import type { Question } from '../types/game'
 
 export const categories = [
-  'Champ Select',
+  'Drip or Int',
   'Kluft-Kalkulation',
   'Ability Abuse',
   'Tiltmoji',
@@ -12,7 +12,7 @@ export const categories = [
 export const questions: Question[] = [
   {
     id: 'champions-100',
-    category: 'Champ Select',
+    category: 'Drip or Int',
     value: 100,
     difficulty: 'easy',
     question: 'Bildfrage: Welcher Champion ist das?',
@@ -22,7 +22,7 @@ export const questions: Question[] = [
   },
   {
     id: 'champions-200',
-    category: 'Champ Select',
+    category: 'Drip or Int',
     value: 200,
     difficulty: 'easy',
     question: 'Bildfrage: Welcher Champion ist das?',
@@ -32,7 +32,7 @@ export const questions: Question[] = [
   },
   {
     id: 'champions-300',
-    category: 'Champ Select',
+    category: 'Drip or Int',
     value: 300,
     difficulty: 'medium',
     question: 'Bildfrage: Welcher Champion ist das?',
@@ -42,7 +42,7 @@ export const questions: Question[] = [
   },
   {
     id: 'champions-400',
-    category: 'Champ Select',
+    category: 'Drip or Int',
     value: 400,
     difficulty: 'medium',
     question: 'Bildfrage: Welcher Champion ist das?',
@@ -52,7 +52,7 @@ export const questions: Question[] = [
   },
   {
     id: 'champions-500',
-    category: 'Champ Select',
+    category: 'Drip or Int',
     value: 500,
     difficulty: 'hard',
     question: 'Bildfrage: Welcher Champion ist das?',
