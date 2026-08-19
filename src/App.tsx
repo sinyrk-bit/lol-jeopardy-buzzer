@@ -74,6 +74,7 @@ function App() {
   const [showLobby, setShowLobby] = useState(false)
   const [pendingQuestion, setPendingQuestion] = useState<Question | null>(null)
   const [manualScoreAmount, setManualScoreAmount] = useState(100)
+  const [showQuickHostTools, setShowQuickHostTools] = useState(false)
   const players = useMemo(() => gameState.players ?? [], [gameState.players])
   const activeTeamId = gameState.activeTeamId ?? gameState.teams[0]?.id ?? null
   const hasSavedGame = gameState.teams.length > 0 && !gameState.gameFinished
@@ -569,30 +570,37 @@ function App() {
           }
         />
         <section className="quick-host-tools" aria-label="Host-Schnellkorrekturen">
-          <label className="manual-score-input">
-            Punkte
-            <input
-              min="0"
-              step="50"
-              type="number"
-              value={manualScoreAmount}
-              onChange={(event) => setManualScoreAmount(Math.max(0, Number(event.target.value) || 0))}
-            />
-          </label>
-          {gameState.teams.map((team) => (
-            <div className="quick-score-buttons" key={team.id}>
-              <span>{team.name}</span>
-              <button className="secondary-button" type="button" onClick={() => adjustTeamScore(team.id, -manualScoreAmount)}>
-                -{manualScoreAmount}
-              </button>
-              <button className="secondary-button" type="button" onClick={() => adjustTeamScore(team.id, manualScoreAmount)}>
-                +{manualScoreAmount}
-              </button>
-            </div>
-          ))}
+          <button className="secondary-button" type="button" onClick={() => setShowQuickHostTools((current) => !current)}>
+            {showQuickHostTools ? 'Korrektur schließen' : 'Korrektur öffnen'}
+          </button>
           <button className="secondary-button" disabled={!gameState.lastQuestionState} type="button" onClick={restoreLastQuestion}>
             Letzte Frage zurückholen
           </button>
+          {showQuickHostTools ? (
+            <div className="quick-host-tools-drawer">
+              <label className="manual-score-input">
+                Punkte
+                <input
+                  min="0"
+                  step="50"
+                  type="number"
+                  value={manualScoreAmount}
+                  onChange={(event) => setManualScoreAmount(Math.max(0, Number(event.target.value) || 0))}
+                />
+              </label>
+              {gameState.teams.map((team) => (
+                <div className="quick-score-buttons" key={team.id}>
+                  <span>{team.name}</span>
+                  <button className="secondary-button" type="button" onClick={() => adjustTeamScore(team.id, -manualScoreAmount)}>
+                    -{manualScoreAmount}
+                  </button>
+                  <button className="secondary-button" type="button" onClick={() => adjustTeamScore(team.id, manualScoreAmount)}>
+                    +{manualScoreAmount}
+                  </button>
+                </div>
+              ))}
+            </div>
+          ) : null}
         </section>
 
         {gameState.currentQuestion ? (
