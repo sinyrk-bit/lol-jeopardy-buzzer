@@ -1448,41 +1448,123 @@ p {
 .game-over {
   align-content: center;
   display: grid;
-  gap: 12px;
+  gap: 14px;
   justify-items: center;
   margin: 0 auto;
-  max-width: 760px;
+  max-width: 900px;
   min-height: 100svh;
+  overflow: hidden;
+  padding: 28px;
   text-align: center;
 }
 
 .game-over h1 {
-  animation: winnerGlow 1.8s ease-in-out infinite alternate;
+  animation: winnerGlow 1.8s ease-in-out infinite alternate, trophyDrop 680ms cubic-bezier(0.2, 1.4, 0.28, 1) both;
+  font-size: clamp(3rem, 8vw, 6.4rem);
+  line-height: 0.92;
+  margin: 0;
+}
+
+.winner-podium {
+  animation: podiumRise 760ms cubic-bezier(0.16, 1, 0.3, 1) 180ms both, neonPanelPulse 5.2s ease-in-out infinite;
+  background:
+    linear-gradient(115deg, rgba(0, 234, 255, 0.18), rgba(255, 31, 191, 0.16), rgba(255, 229, 155, 0.16), rgba(141, 77, 255, 0.14)),
+    rgba(3, 6, 18, 0.58);
+  background-size: 320% 320%, auto;
+  border: 1px solid rgba(255, 229, 155, 0.54);
+  box-shadow:
+    inset 0 0 40px rgba(255, 229, 155, 0.08),
+    0 0 34px rgba(255, 229, 155, 0.2),
+    0 0 54px rgba(255, 31, 191, 0.22);
+  clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+  display: grid;
+  gap: 6px;
+  justify-items: center;
+  padding: 20px 26px;
+  width: min(100%, 720px);
+}
+
+.winner-place,
+.ranking-place {
+  color: var(--gold);
+  font-family: var(--font-display);
+  font-size: 0.86rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.winner-podium h2 {
+  color: var(--text);
+  font-size: clamp(2.2rem, 5.5vw, 4.8rem);
+  line-height: 0.94;
+  margin: 0;
+  text-shadow: 0 0 24px rgba(0, 234, 255, 0.28), 0 0 38px rgba(255, 31, 191, 0.28);
 }
 
 .winner-score {
   color: var(--gold-hot);
-  font-size: 1.7rem;
+  font-size: clamp(1.7rem, 3.2vw, 2.8rem);
   font-weight: 900;
+  margin: 0;
+  text-shadow: 0 0 18px rgba(255, 229, 155, 0.34);
+}
+
+.winner-players {
+  color: var(--muted);
+  font-weight: 800;
+  margin: 0;
 }
 
 .ranking-list {
   display: grid;
-  gap: 8px;
+  gap: 10px;
   list-style: none;
   margin: 0;
   padding: 0;
-  width: min(100%, 520px);
+  width: min(100%, 760px);
 }
 
 .ranking-list li {
   align-items: center;
-  background: rgba(5, 12, 23, 0.64);
-  border: 1px solid rgba(0, 245, 255, 0.12);
-  border-radius: 4px;
-  display: flex;
+  animation: rankSlideIn 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--rank-delay);
+  background:
+    linear-gradient(100deg, rgba(0, 234, 255, 0.16), rgba(255, 31, 191, 0.1), rgba(255, 229, 155, 0.1)),
+    rgba(5, 12, 23, 0.68);
+  border: 1px solid rgba(0, 245, 255, 0.24);
+  box-shadow: inset 0 0 22px rgba(0, 234, 255, 0.05), 0 0 24px rgba(0, 234, 255, 0.1);
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 86px minmax(0, 1fr) auto;
   justify-content: space-between;
-  padding: 9px 12px;
+  min-height: 68px;
+  padding: 10px 14px;
+  text-align: left;
+}
+
+.ranking-team {
+  display: grid;
+  min-width: 0;
+}
+
+.ranking-team span {
+  color: var(--text);
+  font-weight: 900;
+}
+
+.ranking-team small {
+  color: var(--muted);
+  font-weight: 800;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ranking-list strong {
+  color: var(--gold-hot);
+  font-size: 1.5rem;
+  text-align: right;
 }
 
 @keyframes shimmer {
@@ -1573,6 +1655,39 @@ p {
   }
   to {
     text-shadow: 0 0 34px rgba(0, 245, 255, 0.48), 0 0 44px rgba(255, 43, 214, 0.34);
+  }
+}
+
+@keyframes trophyDrop {
+  from {
+    opacity: 0;
+    transform: translateY(-34px) scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes podiumRise {
+  from {
+    opacity: 0;
+    transform: translateY(42px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes rankSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-38px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
 }
 

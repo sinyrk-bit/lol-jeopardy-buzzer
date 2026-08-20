@@ -530,7 +530,7 @@ function App() {
   }
 
   if (screen === 'gameOver' || gameState.gameFinished) {
-    return <GameOverScreen teams={gameState.teams} onNewGame={newGame} />
+    return <GameOverScreen teams={gameState.teams} players={players} onNewGame={newGame} />
   }
 
   if (screen === 'game' && gameState.teams.length > 0) {
