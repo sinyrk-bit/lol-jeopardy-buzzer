@@ -198,19 +198,22 @@ p {
 .player-team-strip,
 .buzz-waiting,
 .game-over {
-  backdrop-filter: blur(4px) saturate(1.12);
-  border: 1px solid rgba(0, 234, 255, 0.28);
+  animation: neonPanelPulse 7s ease-in-out infinite;
+  backdrop-filter: blur(5px) saturate(1.18);
+  border: 1px solid rgba(0, 234, 255, 0.42);
   background:
+    linear-gradient(115deg, rgba(0, 234, 255, 0.16), rgba(255, 31, 191, 0.12), rgba(255, 229, 155, 0.13), rgba(141, 77, 255, 0.12), rgba(0, 234, 255, 0.16)),
     linear-gradient(135deg, rgba(0, 234, 255, 0.1), transparent 34%),
     linear-gradient(225deg, rgba(255, 31, 191, 0.1), transparent 36%),
     linear-gradient(180deg, var(--panel-2), rgba(1, 2, 10, 0.42));
+  background-size: 320% 320%, auto, auto, auto;
   box-shadow:
     inset 0 1px 0 rgba(255, 229, 155, 0.18),
-    inset 0 0 28px rgba(0, 234, 255, 0.04),
-    0 0 0 1px rgba(255, 31, 191, 0.1),
+    inset 0 0 34px rgba(0, 234, 255, 0.08),
+    0 0 0 1px rgba(255, 31, 191, 0.18),
     0 18px 56px rgba(0, 0, 0, 0.34),
-    0 0 34px rgba(0, 234, 255, 0.1),
-    0 0 44px rgba(255, 31, 191, 0.12);
+    0 0 34px rgba(0, 234, 255, 0.18),
+    0 0 44px rgba(255, 31, 191, 0.18);
   clip-path: polygon(0 0, calc(100% - 13px) 0, 100% 13px, 100% 100%, 13px 100%, 0 calc(100% - 13px));
 }
 
@@ -1308,6 +1311,13 @@ p {
   width: min(100%, 980px);
 }
 
+.lobby-overlay,
+.question-start-overlay,
+.question-card,
+.host-panel {
+  animation-duration: 5.6s;
+}
+
 .question-start-overlay {
   display: grid;
   gap: 10px;
@@ -1484,6 +1494,53 @@ p {
   50% {
     opacity: 0.82;
     translate: 8% 0;
+  }
+}
+
+@keyframes neonPanelPulse {
+  0% {
+    background-position: 0% 50%, center, center, center;
+    border-color: rgba(0, 234, 255, 0.46);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 229, 155, 0.18),
+      inset 0 0 34px rgba(0, 234, 255, 0.08),
+      0 0 0 1px rgba(255, 31, 191, 0.18),
+      0 18px 56px rgba(0, 0, 0, 0.34),
+      0 0 32px rgba(0, 234, 255, 0.22),
+      0 0 44px rgba(255, 31, 191, 0.12);
+  }
+  35% {
+    background-position: 72% 42%, center, center, center;
+    border-color: rgba(255, 31, 191, 0.5);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 229, 155, 0.2),
+      inset 0 0 34px rgba(255, 31, 191, 0.09),
+      0 0 0 1px rgba(0, 234, 255, 0.14),
+      0 18px 56px rgba(0, 0, 0, 0.34),
+      0 0 36px rgba(255, 31, 191, 0.26),
+      0 0 48px rgba(141, 77, 255, 0.2);
+  }
+  70% {
+    background-position: 100% 50%, center, center, center;
+    border-color: rgba(255, 229, 155, 0.48);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 229, 155, 0.24),
+      inset 0 0 34px rgba(255, 229, 155, 0.08),
+      0 0 0 1px rgba(255, 31, 191, 0.16),
+      0 18px 56px rgba(0, 0, 0, 0.34),
+      0 0 32px rgba(255, 229, 155, 0.18),
+      0 0 44px rgba(0, 234, 255, 0.2);
+  }
+  100% {
+    background-position: 0% 50%, center, center, center;
+    border-color: rgba(0, 234, 255, 0.46);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 229, 155, 0.18),
+      inset 0 0 34px rgba(0, 234, 255, 0.08),
+      0 0 0 1px rgba(255, 31, 191, 0.18),
+      0 18px 56px rgba(0, 0, 0, 0.34),
+      0 0 32px rgba(0, 234, 255, 0.22),
+      0 0 44px rgba(255, 31, 191, 0.12);
   }
 }
 
