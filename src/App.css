@@ -1115,8 +1115,45 @@ p {
   gap: 0;
   grid-template-rows: auto;
   max-height: none;
-  padding: 8px 10px;
-  width: min(260px, calc(100vw - 24px));
+  padding: 8px 7px;
+  width: 48px;
+}
+
+.chat-panel.is-minimized .chat-header {
+  gap: 8px;
+  grid-template-columns: 1fr;
+  justify-items: center;
+}
+
+.chat-panel.is-minimized .chat-header > div:first-child {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.chat-panel.is-minimized .chat-header .eyebrow {
+  writing-mode: vertical-rl;
+}
+
+.chat-panel.is-minimized .chat-header strong {
+  max-height: 96px;
+  max-width: none;
+  text-orientation: mixed;
+  writing-mode: vertical-rl;
+}
+
+.chat-panel.is-minimized .chat-header-actions {
+  justify-content: center;
+}
+
+.chat-panel.is-minimized .chat-minimize-button {
+  align-items: center;
+  display: flex;
+  min-height: 92px;
+  padding: 6px 5px;
+  text-orientation: mixed;
+  writing-mode: vertical-rl;
 }
 
 .chat-header {
